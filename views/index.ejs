@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"
+style="min-width: 100%; min-height: 100%">
+  <head>
+    <meta charset="utf-8">
+    <title>EarWorm</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="/stylesheets/modal.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.2/angular-ui-router.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.js"></script>
+
+    <script src="/javascripts/angularApp.js"></script>
+  <!--  <script src="/javascripts/angularStyle.js"></script> -->
+    <style>.glyphicon-thumbs-up {cursor: pointer}
+           .glyphicon-remove {opacity: 0.2}
+           .glyphicon-remove:hover {opacity: 0.5}
+           .userform {width: 50%; display: block; margin: 0 auto;}</style>
+  </head>
+
+  <body ng-app="EarWorm" style="background: linear-gradient(180deg, white, lightgray); font-family: Optima" class="image">
+
+    <nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
+      <ul class="nav navbar-nav">
+        <li ng-show="isLoggedIn()"><a>{{currentUser()}}</a></li>
+        <li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
+        <li ng-hide="isLoggedIn()"><a href="/#/login">Log In</a></li>
+        <li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
+      </ul>
+    </nav>
+
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <ui-view></ui-view>
+      </div>
+    </div>
+
+  <!-- TEMPLATES -->
+
+  <!-- Template - Home -->
+  <script type="text/ng-template" id="/home.html">
+    <!-- Logo -->
+    <div class="page-header">
+      <a href="#/home.html"><img src="/images/logo.png" style = "width: 50%"></a>
+    </div>
+    <!-- Log In / Register -->
+    <div ng-hide="isLoggedIn()" style="text-align: center">
+      <h3>We'd love to hear what you're listening to.</br>
+        <a href="/#/login">Log In</a> or <a href="/#/register">Register</a>
+        to tell the world.
+      </h3>
+    </div>
+
+    <!-- Add Post -->
+    <form ng-submit="addPost()" ng-show="isLoggedIn()" style="margin-top: 30px;">
+      <h3 style="text-align: center;">What are you listening to?</h3><br>
+      <span>
+        <!-- Title -->
+        <div class="form-group" style="float: left; width: 49%">
+          <input type="text" placeholder="Title" class="form-control" ng-model="title" required>
+        </div>
+        <!-- Artist -->
+        <div class="form-group" style="float: left; margin-left: 2%; width: 49%">
+          <input type="text" placeholder="Artist" class="form-control" ng-model="artist" required>
+        </div>
+      </span>
+      <!-- Caption -->
+      <div class="form-group">
+        <input style="height: 50px;" type="text" placeholder="Caption" class="form-control" ng-model="caption">
+      </div>
+      <!-- Submit -->
+      <button type="submit" style="display: block; margin: 0 auto" class="btn btn-primary">Upload</button>
+    </form>
+
+    <!-- Posts -->
+    <div ng-repeat="post in posts | orderBy: '-upvotes.length'"
+    style="background-color: #e4ede6; border: 1px solid black; padding: 20px; margin-top: 20px; border-radius: 5px">
+      <!-- Delete Post -->
+      <span style="margin: -10px -10px 0 0; float: right;" class="glyphicon glyphicon-remove"
+      ng-show="authoredPost(post)" ng-click="deletePost(post)"></span>
+      <!-- Author + Title + Artist -->
+      <span style="font-size: 20px; font-color: lightgray; float: left">
+      <span class="glyphicon glyphicon-volume-up"></span>
+      <a href="#/user/{{user._id}}" style="color:black">{{post.author}}</a>
+       is listening to <b>{{post.song.title}}</b> - <i>{{post.song.artist}}</i></span>
+      <br/><br/>
+      <!-- Caption -->
+      <span style="font-size: 15px; margin-left: 20px">{{post.caption}}</span>
+      <br/>
+      <!-- Media -->
+      <span style="float: right">
+        <!-- Upvote Button -->
+        <span style="cursor: pointer" ng-show="isLoggedIn()"
+        class="glyphicon glyphicon-thumbs-up" ng-click="upvotePost(post)"></span>
+        <span style="cursor: not-allowed" ng-hide="isLoggedIn()"
+        class="glyphicon glyphicon-thumbs-up" ng-click="upvotePost(post)"></span>
+        <!-- Upvote Count -->
+        <span ng-show="upvotedPost(post)"><b>{{post.upvotes.length}}</b></span>
+        <span ng-hide="upvotedPost(post)">{{post.upvotes.length}}</span>
+        <!-- Link to Post -->
+        <a href="#/posts/{{post._id}}">
+          <span style="margin-left: 5px; filter: grayscale(100%)" class="glyphicon glyphicon-comment"></span>
+        </a>
+        {{post.comments.length}}
+      </span>
+    </div>
+    <!-- Footer Padding -->
+    <div style="height: 5%; padding: 5%"></div>
+  </script>
+
+  <!-- Template - Post -->
+  <script type="text/ng-template" id="/posts.html">
+    <!-- Logo -->
+    <div class="page-header">
+      <a href="#/home"><img src="/images/logo.png" style = "width: 33%"></a>
+    </div>
+    <!-- Post Info -->
+    <div class="page-header">
+      <h2 style="">
+        <!-- Upvote Button -->
+        <span style="cursor: pointer" ng-show="isLoggedIn()"
+        class="glyphicon glyphicon-thumbs-up" ng-click="upvotePost(post)"></span>
+        <span style="cursor: not-allowed" ng-hide="isLoggedIn()"
+        class="glyphicon glyphicon-thumbs-up" ng-click="upvotePost(post)"></span>
+        <!-- Upvote Count -->
+        <span ng-show="upvotedPost(post)"><b>{{post.upvotes.length}}</b> - </span>
+        <span ng-hide="upvotedPost(post)">{{post.upvotes.length}} - </span>
+        <!-- Author -->
+        {{post.author}} is listening to<br>
+        <!-- Title + Artist -->
+        <b style="margin: auto;">{{post.song.title}}</b> - <i>{{post.song.artist}}</i></span>
+      </h2><br>
+      <!-- Caption -->
+      <h4 style="text-align: center; background-color: #e4ede6; border-radius: 5px;
+          border: 1px solid black; padding: 20px;">{{post.caption}}</h4>
+    </div>
+    <hr style="border: 1px solid lightgray;">
+    <!-- Comments -->
+    <h3 ng-show="post.comments.length !== 0">Comments:</h3>
+    <div ng-repeat="comment in post.comments | orderBy: '-upvotes.length'"
+      style="background-color: #edf2ef; border: 1px solid black;
+      padding: 25px; margin-top: 20px; border-radius: 5px;
+      width: 50%;">
+      <!-- Delete Comment -->
+      <span style="margin: -10px -10px 0 0; float: right;" class="glyphicon glyphicon-remove"
+      ng-click="deleteComment(comment)" ng-show="authoredComment(comment)"></span>
+      <!-- Upvote Button -->
+      <span style="cursor: pointer" ng-show="isLoggedIn()"
+      class="glyphicon glyphicon-thumbs-up" ng-click="upvoteComment(comment)"></span>
+      <span style="cursor: not-allowed" ng-hide="isLoggedIn()"
+      class="glyphicon glyphicon-thumbs-up" ng-click="upvoteComment(comment)"></span>
+      <!-- Upvote Count -->
+      <span ng-show="upvotedComment(comment)"><b>{{comment.upvotes.length}}</b></span>
+      <span ng-hide="upvotedComment(comment)">{{comment.upvotes.length}}</span>
+      <!-- Comment Author -->
+       <span style = "margin-right: 10px;"> - {{comment.author}}</span>
+        <!-- Comment Body -->
+        <span style="font-size:20px; word-wrap: break-word">
+          {{comment.body}}</span>
+      </div>
+      <!-- First Comment Text -->
+      <h3 ng-show="post.comments.length === 0">Be the first to comment.</h3>
+      <!-- Add Comment -->
+      <form ng-submit="addComment()" ng-show="isLoggedIn()" style="margin-top: 30px">
+        <h3>Thoughts?</h3>
+        <!-- Comment Body -->
+        <div class="form-group">
+          <textarea type="text" class="form-control" style="width: 50%" rows=3
+          placeholder="Comment" ng-model="body" required></textarea>
+        </div>
+        <!-- Submit Comment -->
+        <button type="submit" class="btn btn-primary">Post</button>
+      </form>
+      <!-- Log In / Register to comment -->
+      <div ng-hide="isLoggedIn()" text-align="center">
+        <h3><a href="/#/login">Log In</a> or <a href="/#/register">Register</a>
+          to share your thoughts.
+        </h3>
+    </div>
+    <!-- Footer Padding -->
+    <div style="height: 5%; padding: 5%"></div>
+  </script>
+
+    <!-- Template - Register -->
+  <script type="text/ng-template" id="/register.html">
+    <!-- Logo -->
+    <div class="page-header" style="text-align: center;">
+      <a href="#/home"><img src="/images/logo.png" style = "width: 33%"></a>
+    </div>
+    <!-- Error Message -->
+    <div ng-show="error" class="alert-danger row">
+      <span>{{error.message}}</span>
+    </div>
+    <!-- Register Form -->
+    <form ng-submit="register()" style="margin-top:30px; text-align: center">
+      <h3><b>Create a New Account</b></h3></br>
+      <!-- Username -->
+      <div class="form-group">
+        <input type="text" class="form-control userform"
+        placeholder="Username" ng-model="user.username"></input>
+      </div>
+      <!-- Password -->
+      <div class="form-group">
+        <input type="password" class="form-control userform"
+        placeholder="Password" ng-model="user.password"></input>
+      </div>
+      <!-- Submit -->
+      <button style="padding-left: 20px; padding-right: 20px;
+      border-color: black; background-color: #1DB954"
+      type="submit" class="btn btn-primary">Register</button>
+    </form>
+  </script>
+
+  <!-- Template - Log In -->
+  <script type="text/ng-template" id="/login.html">
+    <!-- Logo -->
+    <div class="page-header" style="text-align: center;">
+      <a href="#/home"><img src="/images/logo.png" style = "width: 33%"></a>
+    </div>
+    <!-- Error Message -->
+    <div ng-show="error" class="alert-danger row">
+      <span>{{ error.message }}</span>
+    </div>
+    <!-- Log In Form -->
+    <form ng-submit="logIn()" style="margin-top:30px; text-align: center;">
+      <h3><b>Log in to EarWorm</b></h3><br/>
+      <!-- Username -->
+      <div class="form-group">
+        <input type="text" class="form-control userform"
+        placeholder="Username" ng-model="user.username"></input>
+      </div>
+      <!-- Password -->
+      <div class="form-group">
+        <input type="password" class="form-control userform"
+        placeholder="Password" ng-model="user.password"></input>
+      </div>
+      <!-- Submit -->
+      <button style="padding-left: 20px; padding-right: 20px;
+      border-color: black; background-color: #1DB954"
+      type="submit" class="btn btn-primary">Log In</button>
+    </form>
+  </script>
+
+  <script type="text/ng-template" id="/user.html">
+    <!-- Logo -->
+    <div class="page-header" style="text-align: center;">
+      <a href="#/home"><img src="/images/logo.png" style = "width: 33%"></a>
+    </div>
+  </script>
+
+  </body>
+</html>
