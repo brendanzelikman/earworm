@@ -234,13 +234,43 @@ var app = angular.module('EarWorm', ['ui.router'])
     };
 
     $scope.addPost = function(){
-      posts.create({
-        song: { title: $scope.title, artist: $scope.artist },
-        caption: $scope.caption,
-      });
-      $scope.title = '';
-      $scope.artist = '';
-      $scope.caption = '';
+
+      var form =
+      "<span style='margin-top: 10px; text-align: center;'><h2><b>" + auth.currentUser() + "</b> is listening to...</h2></span>" +
+      `<form style="margin-top: 30px;">
+        <div class="form-group" style="float: left; width: 49%">
+          <input id="title" type="text" placeholder="Title" class="form-control" required>
+          </div>
+        <div class="form-group" style="float: left; margin-left: 2%; width: 49%">
+          <input id="artist" type="text" placeholder="Artist" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <input id="caption" style="height: 50px;" type="text" placeholder="Caption" class="form-control">
+        </div>
+      </form>`;
+
+      bootbox.confirm({
+        message: form,
+        buttons: {
+          cancel: {
+            label: 'Cancel'
+          },
+          confirm: {
+            label: 'Post'
+          }
+        },
+        callback: function(result) {
+          if (result){
+            posts.create({
+              song: {
+                title: document.getElementById('title').value,
+                artist: document.getElementById('artist').value
+              },
+              caption: document.getElementById('caption').value
+            });
+          }
+        }
+    });
     };
 
     var modalX = "<div style='margin-top: 20px;' class='icon-box'><i class='material-icons'>&#xE5CD;</i></div>";

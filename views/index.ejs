@@ -22,6 +22,8 @@ style="min-width: 100%; min-height: 100%">
     <style>.glyphicon-thumbs-up {cursor: pointer}
            .glyphicon-remove {opacity: 0.2}
            .glyphicon-remove:hover {opacity: 0.5}
+           .postbtn {opacity: 0.75}
+           .postbtn:hover {opacity: 1}
            .userform {width: 50%; display: block; margin: 0 auto;}</style>
   </head>
 
@@ -59,25 +61,14 @@ style="min-width: 100%; min-height: 100%">
     </div>
 
     <!-- Add Post -->
-    <form ng-submit="addPost()" ng-show="isLoggedIn()" style="margin-top: 30px;">
-      <h3 style="text-align: center;">What are you listening to?</h3><br>
-      <span>
-        <!-- Title -->
-        <div class="form-group" style="float: left; width: 49%">
-          <input type="text" placeholder="Title" class="form-control" ng-model="title" required>
-        </div>
-        <!-- Artist -->
-        <div class="form-group" style="float: left; margin-left: 2%; width: 49%">
-          <input type="text" placeholder="Artist" class="form-control" ng-model="artist" required>
-        </div>
-      </span>
-      <!-- Caption -->
-      <div class="form-group">
-        <input style="height: 50px;" type="text" placeholder="Caption" class="form-control" ng-model="caption">
-      </div>
-      <!-- Submit -->
-      <button type="submit" style="display: block; margin: 0 auto" class="btn btn-primary">Upload</button>
-    </form>
+    <form ng-controller="NavCtrl" ng-submit="addPost()" ng-show="isLoggedIn()" style="margin-top: 30px;">
+      <h3 style="text-align: center;"></h3><br>
+      <button type="submit" class="btn btn-primary postbtn"
+        style="display: block; margin: 0 auto; width: 50%; padding: 10px; outline-width: 0px;
+        background-color: #f0f5f1; color: black; border-radius: 5px; border: 1px solid black;" >
+        What are you listening to, {{currentUser()}}?
+      </button>
+    </form><br><br><br>
 
     <!-- Posts -->
     <div ng-repeat="post in posts | orderBy: '-upvotes.length'"
@@ -173,7 +164,7 @@ style="min-width: 100%; min-height: 100%">
         <!-- Comment Body -->
         <div class="form-group">
           <textarea type="text" class="form-control" style="width: 50%" rows=3
-          placeholder="Comment" ng-model="body" required></textarea>
+          ng-model="body" required></textarea>
         </div>
         <!-- Submit Comment -->
         <button type="submit" class="btn btn-primary">Post</button>
@@ -201,6 +192,8 @@ style="min-width: 100%; min-height: 100%">
     <!-- Register Form -->
     <form ng-submit="register()" style="margin-top:30px; text-align: center">
       <h3><b>Create a New Account</b></h3></br>
+      <!-- Login --->
+      <a href="#/login"><h5 style-"text-align: center;">Already have an account?</h5></a>
       <!-- Username -->
       <div class="form-group">
         <input type="text" class="form-control userform"
@@ -231,6 +224,8 @@ style="min-width: 100%; min-height: 100%">
     <!-- Log In Form -->
     <form ng-submit="logIn()" style="margin-top:30px; text-align: center;">
       <h3><b>Log in to EarWorm</b></h3><br/>
+      <!-- Register --->
+      <a href="#/register"><h5 style-"text-align: center;">Don't have an account yet?</h5></a>
       <!-- Username -->
       <div class="form-group">
         <input type="text" class="form-control userform"
