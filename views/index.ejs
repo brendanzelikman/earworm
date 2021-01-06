@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr"
-style="min-width: 100%; min-height: 100%">
+style="min-width: 100%; min-height: 100%; overflow:hidden">
   <head>
     <meta charset="utf-8">
     <title>EarWorm</title>
     <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="stylesheet" href="/stylesheets/modal.css">
+    <link rel="stylesheet" href="/stylesheets/fontstyle.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -27,7 +28,7 @@ style="min-width: 100%; min-height: 100%">
            .userform {width: 50%; display: block; margin: 0 auto;}</style>
   </head>
 
-  <body ng-app="EarWorm" style="background: linear-gradient(180deg, white, lightgray); font-family: Optima" class="image">
+  <body ng-app="EarWorm" style="background: linear-gradient(180deg, white, lightgray); font-family: SourceSansPro" class="image">
 
     <nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
       <ul class="nav navbar-nav">
@@ -38,7 +39,7 @@ style="min-width: 100%; min-height: 100%">
       </ul>
     </nav>
 
-    <div class="row">
+    <div class="row" style="overflow-x: auto">
       <div class="col-md-6 col-md-offset-3">
         <ui-view></ui-view>
       </div>
@@ -50,7 +51,7 @@ style="min-width: 100%; min-height: 100%">
   <script type="text/ng-template" id="/home.html">
     <!-- Logo -->
     <div class="page-header">
-      <a href="#/home.html"><img src="/images/logo.png" style = "width: 50%"></a>
+      <a href="#/home.html"><img src="/images/logo.png" style = "width: 50%;"></a>
     </div>
     <!-- Log In / Register -->
     <div ng-hide="isLoggedIn()" style="text-align: center">
@@ -113,32 +114,53 @@ style="min-width: 100%; min-height: 100%">
       <a href="#/home"><img src="/images/logo.png" style = "width: 33%"></a>
     </div>
     <!-- Post Info -->
-    <div class="page-header">
-      <h2 style="">
-        <!-- Upvote Button -->
-        <span style="cursor: pointer" ng-show="isLoggedIn()"
-        class="glyphicon glyphicon-thumbs-up" ng-click="upvotePost(post)"></span>
-        <span style="cursor: not-allowed" ng-hide="isLoggedIn()"
-        class="glyphicon glyphicon-thumbs-up" ng-click="upvotePost(post)"></span>
-        <!-- Upvote Count -->
-        <span ng-show="upvotedPost(post)"><b>{{post.upvotes.length}}</b> - </span>
-        <span ng-hide="upvotedPost(post)">{{post.upvotes.length}} - </span>
-        <!-- Author -->
-        {{post.author}} is listening to<br>
-        <!-- Title + Artist -->
-        <b style="margin: auto;">{{post.song.title}}</b> - <i>{{post.song.artist}}</i></span>
+    <div>
+    <div>
+      <!-- Title + Artist -->
+      <h2 style="text-align: center;">
+        <b>{{post.song.title}}</b> - <i>{{post.song.artist}}</i>
       </h2><br>
-      <!-- Caption -->
+      <!-- Upvote + Caption -->
       <h4 style="text-align: center; background-color: #e4ede6; border-radius: 5px;
-          border: 1px solid black; padding: 20px;">{{post.caption}}</h4>
+      border: 1px solid black; padding: 20px; position: relative;">
+        <div style="position: absolute; left: -45px; top: 50%; margin-top: -10px;">
+          <!-- Upvote Button -->
+          <span style="cursor: pointer" ng-show="isLoggedIn()"
+          class="glyphicon glyphicon-thumbs-up" ng-click="upvotePost(post)"></span>
+          <span style="cursor: not-allowed" ng-hide="isLoggedIn()"
+          class="glyphicon glyphicon-thumbs-up" ng-click="upvotePost(post)"></span>
+          <!-- Upvote Count -->
+          <span ng-show="upvotedPost(post)">
+            <b>{{post.upvotes.length}}</b></span>
+          <span ng-hide="upvotedPost(post)">
+            {{post.upvotes.length}}</span>
+        </div>
+        {{post.caption}}
+      </h4>
+      <!-- Author + Timestamp -->
+      <h4 style="padding-top: 10px; text-align: right;">
+      posted {{timeSince(post.createdAt)}} ago by {{post.author}}</h4>
     </div>
+    <!-- Break -->
     <hr style="border: 1px solid lightgray;">
+    <!-- First Comment Text -->
+    <h3 ng-show="post.comments.length === 0">Be the first to comment.</h3>
+    <!-- Add Comment -->
+    <form ng-submit="addComment()" ng-show="isLoggedIn()" style="margin-top: 30px;">
+      <h3>Thoughts?</h3>
+      <!-- Comment Body -->
+      <div class="form-group" style="position: relative;">
+        <textarea type="text" class="form-control" style="width: 50%;" rows=3
+        ng-model="body" required></textarea>
+        <button type="submit" style="position: absolute; height: 33px;top: 50%;margin-top:-16px; left:-65px;"class="btn btn-primary">Post</button>
+      </div>
+      <!-- Submit Comment -->
+    </form>
     <!-- Comments -->
-    <h3 ng-show="post.comments.length !== 0">Comments:</h3>
+    <h3 ng-show="post.comments.length !== 0">Comments: {{post.comments.length}}</h3>
     <div ng-repeat="comment in post.comments | orderBy: '-upvotes.length'"
-      style="background-color: #edf2ef; border: 1px solid black;
-      padding: 25px; margin-top: 20px; border-radius: 5px;
-      width: 50%; position: relative;">
+      style="background-color: #edf2ef; border: 1px solid black; width: 50%;
+      padding: 25px; margin-top: 20px; border-radius: 5px; position: relative;">
       <!-- Delete Comment -->
       <span style="margin: -10px -10px 0 0; float: right;" class="glyphicon glyphicon-remove"
       ng-click="deleteComment(comment)" ng-show="authoredComment(comment)"></span>
@@ -156,23 +178,11 @@ style="min-width: 100%; min-height: 100%">
       <span style="font-size:20px; word-wrap: break-word">{{comment.body}}</span>
       <!-- Comment Timestamp -->
       <span style="position: absolute; bottom: -5px; right: 5px">
-        <h6>posted {{timeSince(comment)}} ago by {{comment.author}}</h6>
+        <h6>posted {{timeSince(comment.createdAt)}} ago by {{comment.author}}</h6>
       </span>
 
       </div>
-      <!-- First Comment Text -->
-      <h3 ng-show="post.comments.length === 0">Be the first to comment.</h3>
-      <!-- Add Comment -->
-      <form ng-submit="addComment()" ng-show="isLoggedIn()" style="margin-top: 30px">
-        <h3>Thoughts?</h3>
-        <!-- Comment Body -->
-        <div class="form-group">
-          <textarea type="text" class="form-control" style="width: 50%" rows=3
-          ng-model="body" required></textarea>
-        </div>
-        <!-- Submit Comment -->
-        <button type="submit" class="btn btn-primary">Post</button>
-      </form>
+    </div>
       <!-- Log In / Register to comment -->
       <div ng-hide="isLoggedIn()" text-align="center">
         <h3><a href="/#/login">Log In</a> or <a href="/#/register">Register</a>
