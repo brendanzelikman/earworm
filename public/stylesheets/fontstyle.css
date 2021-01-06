@@ -35,3 +35,13 @@ src: local('Optima Bold'), url('../fonts/OPTIMA_B.woff') format('woff');
 font-family: 'SourceSansPro';
 src: url('../fonts/SourceSansPro-Regular.ttf');
 }
+
+@font-face {
+font-family: 'SourceSansPro-Bold';
+src: url('../fonts/SourceSansPro-Bold.ttf');
+}
+
+@font-face {
+font-family: 'SourceSansPro-Italic';
+src: url('../fonts/SourceSansPro-Italic.ttf');
+}

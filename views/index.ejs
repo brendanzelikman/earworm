@@ -20,12 +20,14 @@ style="min-width: 100%; min-height: 100%;">
 
     <script src="/javascripts/angularApp.js"></script>
   <!--  <script src="/javascripts/angularStyle.js"></script> -->
-    <style>.glyphicon-thumbs-up {cursor: pointer}
+    <style>.glyphicon-thumbs-up, .glyphicon-edit, .glyphicon-remove {cursor: pointer}
            .glyphicon-remove, .glyphicon-edit {opacity: 0.2}
            .glyphicon-remove:hover, .glyphicon-edit:hover {opacity: 0.5}
            .postbtn {opacity: 0.75}
            .postbtn:hover {opacity: 1}
-           .userform {width: 50%; display: block; margin: 0 auto;}</style>
+           .userform {width: 50%; display: block; margin: 0 auto;}
+           .bold {font-family: SourceSansPro-Bold}
+           .italic {font-family: SourceSansPro-Italic}</style>
   </head>
 
   <body ng-app="EarWorm" style="background: linear-gradient(180deg, white, lightgray); font-family: SourceSansPro" class="image">
@@ -87,7 +89,7 @@ style="min-width: 100%; min-height: 100%;">
       <span style="font-size: 20px; font-color: lightgray; float: left">
       <span class="glyphicon glyphicon-volume-up"></span>
       <a href="#/user/{{user._id}}" style="color:black">{{post.author}}</a>
-       is listening to <b>{{post.song.title}}</b> - <i>{{post.song.artist}}</i></span>
+       is listening to <b class="bold">{{post.song.title}}</b> - <i class="italic">{{post.song.artist}}</i></span>
       <br/><br/>
       <!-- Caption -->
       <span style="font-size: 15px; margin-left: 20px">{{post.caption}}</span>
@@ -95,12 +97,11 @@ style="min-width: 100%; min-height: 100%;">
       <!-- Media -->
       <span style="float: right">
         <!-- Upvote Button -->
-        <span style="cursor: pointer" ng-show="isLoggedIn()"
-        class="glyphicon glyphicon-thumbs-up" ng-click="upvotePost(post)"></span>
+        <span ng-show="isLoggedIn()" class="glyphicon glyphicon-thumbs-up" ng-click="upvotePost(post)"></span>
         <span style="cursor: not-allowed" ng-hide="isLoggedIn()"
         class="glyphicon glyphicon-thumbs-up" ng-click="upvotePost(post)"></span>
         <!-- Upvote Count -->
-        <span ng-show="upvotedPost(post)"><b>{{post.upvotes.length}}</b></span>
+        <span ng-show="upvotedPost(post)" class="bold"><b>{{post.upvotes.length}}</b></span>
         <span ng-hide="upvotedPost(post)">{{post.upvotes.length}}</span>
         <!-- Link to Post -->
         <a href="#/posts/{{post._id}}">
@@ -124,14 +125,14 @@ style="min-width: 100%; min-height: 100%;">
     <div>
       <!-- Title + Artist -->
       <h2 style="text-align: center;">
-        <b>{{post.song.title}}</b> - <i>{{post.song.artist}}</i>
+        <b class="bold">{{post.song.title}}</b> - <i class="italic">{{post.song.artist}}</i>
       </h2><br>
       <!-- Upvote + Caption -->
       <h4 style="text-align: center; background-color: #e4ede6; border-radius: 5px;
       border: 1px solid black; padding: 20px; position: relative;">
         <div style="position: absolute; left: -45px; top: 50%; margin-top: -10px;">
           <!-- Upvote Button -->
-          <span style="cursor: pointer" ng-show="isLoggedIn()"
+          <span ng-show="isLoggedIn()"
           class="glyphicon glyphicon-thumbs-up" ng-click="upvotePost(post)"></span>
           <span style="cursor: not-allowed" ng-hide="isLoggedIn()"
           class="glyphicon glyphicon-thumbs-up" ng-click="upvotePost(post)"></span>
@@ -186,7 +187,7 @@ style="min-width: 100%; min-height: 100%;">
         <span style="cursor: not-allowed" ng-hide="isLoggedIn()"
         class="glyphicon glyphicon-thumbs-up" ng-click="upvoteComment(comment)"></span>
         <!-- Upvote Count -->
-        <span ng-show="upvotedComment(comment)"><b>{{comment.upvotes.length}}</b></span>
+        <span ng-show="upvotedComment(comment)" class="bold"><b>{{comment.upvotes.length}}</b></span>
         <span ng-hide="upvotedComment(comment)">{{comment.upvotes.length}}</span>
       </div>
       <!-- Comment Body -->
@@ -220,7 +221,7 @@ style="min-width: 100%; min-height: 100%;">
     </div>
     <!-- Register Form -->
     <form ng-submit="register()" style="margin-top:30px; text-align: center">
-      <h3><b>Create a New Account</b></h3></br>
+      <h3 class="bold"><b>Create a New Account</b></h3></br>
       <!-- Login --->
       <a href="#/login"><h5 style-"text-align: center;">Already have an account?</h5></a>
       <!-- Username -->
@@ -252,7 +253,7 @@ style="min-width: 100%; min-height: 100%;">
     </div>
     <!-- Log In Form -->
     <form ng-submit="logIn()" style="margin-top:30px; text-align: center;">
-      <h3><b>Log in to EarWorm</b></h3><br/>
+      <h3 class="bold"><b>Log in to EarWorm</b></h3><br/>
       <!-- Register --->
       <a href="#/register"><h5 style-"text-align: center;">Don't have an account yet?</h5></a>
       <!-- Username -->
