@@ -370,9 +370,9 @@ var app = angular.module('EarWorm', ['ui.router'])
       return comment.upvotes.includes(auth.currentUser());
     };
 
-    $scope.timeSince = function(comment) {
+    $scope.timeSince = function(date) {
 
-    var seconds = Math.floor((new Date() - Date.parse(comment.createdAt)) / 1000);
+    var seconds = Math.floor((new Date() - Date.parse(date)) / 1000);
     var interval = seconds / 31536000;
 
     if (interval > 1) {
