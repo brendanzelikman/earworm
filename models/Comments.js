@@ -5,7 +5,7 @@ var CommentSchema = new mongoose.Schema({
   author: String,
   upvotes: {type: Array, default: []},
   post: { type: mongoose.Schema.Types.ObjectId, ref: 'Post'}
-});
+}, {timestamps: true});
 
 CommentSchema.methods.upvote = function(name, cb){
   if (!this.upvotes.includes(name)){

@@ -138,23 +138,27 @@ style="min-width: 100%; min-height: 100%">
     <div ng-repeat="comment in post.comments | orderBy: '-upvotes.length'"
       style="background-color: #edf2ef; border: 1px solid black;
       padding: 25px; margin-top: 20px; border-radius: 5px;
-      width: 50%;">
+      width: 50%; position: relative;">
       <!-- Delete Comment -->
       <span style="margin: -10px -10px 0 0; float: right;" class="glyphicon glyphicon-remove"
       ng-click="deleteComment(comment)" ng-show="authoredComment(comment)"></span>
       <!-- Upvote Button -->
-      <span style="cursor: pointer" ng-show="isLoggedIn()"
-      class="glyphicon glyphicon-thumbs-up" ng-click="upvoteComment(comment)"></span>
-      <span style="cursor: not-allowed" ng-hide="isLoggedIn()"
-      class="glyphicon glyphicon-thumbs-up" ng-click="upvoteComment(comment)"></span>
-      <!-- Upvote Count -->
-      <span ng-show="upvotedComment(comment)"><b>{{comment.upvotes.length}}</b></span>
-      <span ng-hide="upvotedComment(comment)">{{comment.upvotes.length}}</span>
-      <!-- Comment Author -->
-       <span style = "margin-right: 10px;"> - {{comment.author}}</span>
-        <!-- Comment Body -->
-        <span style="font-size:20px; word-wrap: break-word">
-          {{comment.body}}</span>
+      <div style="position: absolute; left: -40px; top: 50%; margin-top: -10px;">
+        <span style="cursor: pointer" ng-show="isLoggedIn()"
+        class="glyphicon glyphicon-thumbs-up" ng-click="upvoteComment(comment)"></span>
+        <span style="cursor: not-allowed" ng-hide="isLoggedIn()"
+        class="glyphicon glyphicon-thumbs-up" ng-click="upvoteComment(comment)"></span>
+        <!-- Upvote Count -->
+        <span ng-show="upvotedComment(comment)"><b>{{comment.upvotes.length}}</b></span>
+        <span ng-hide="upvotedComment(comment)">{{comment.upvotes.length}}</span>
+      </div>
+      <!-- Comment Body -->
+      <span style="font-size:20px; word-wrap: break-word">{{comment.body}}</span>
+      <!-- Comment Timestamp -->
+      <span style="position: absolute; bottom: -5px; right: 5px">
+        <h6>posted {{timeSince(comment)}} ago by {{comment.author}}</h6>
+      </span>
+
       </div>
       <!-- First Comment Text -->
       <h3 ng-show="post.comments.length === 0">Be the first to comment.</h3>
