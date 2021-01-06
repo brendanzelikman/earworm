@@ -6,6 +6,32 @@
 
  /*jshint esversion: 6 */
 
+ function timeSince(date) {
+
+ var seconds = Math.floor((new Date() - Date.parse(date)) / 1000);
+ var interval = seconds / 31536000;
+
+ if (interval > 1) {
+  return Math.floor(interval) + "y";
+ }
+ interval = seconds / 2592000;
+ if (interval > 1) {
+  return Math.floor(interval) + "mo";
+ }
+ interval = seconds / 86400;
+ if (interval > 1) {
+  return Math.floor(interval) + "d";
+ }
+ interval = seconds / 3600;
+ if (interval > 1) {
+  return Math.floor(interval) + "h";
+ }
+ interval = seconds / 60;
+ if (interval > 1) {
+  return Math.floor(interval) + "m";
+ }
+ return Math.floor(seconds) + "s";
+ }
 
 var app = angular.module('EarWorm', ['ui.router'])
 
@@ -97,6 +123,11 @@ var app = angular.module('EarWorm', ['ui.router'])
     });
   };
 
+  o.editPost = function(post, newPost){
+    $http.put('/posts/'+post._id, [post, newPost]);
+    location.reload();
+  };
+
   o.deleteComment = function(post, comment){
     return $http.delete('/posts/'+post._id+'/comments/'+comment._id, {
       headers: {Authorization: 'Bearer '+auth.getToken()}
@@ -124,6 +155,11 @@ var app = angular.module('EarWorm', ['ui.router'])
     return $http.post('/posts/'+id+'/comments', comment, {
       headers: {Authorization: 'Bearer '+auth.getToken()}
     });
+  };
+
+  o.editComment = function(post, comment, newBody){
+    $http.put('/posts/'+post._id+'/comments/'+comment._id, [comment, newBody]);
+    location.reload();
   };
 
   o.upvoteComment = function(post, comment){
@@ -231,6 +267,10 @@ var app = angular.module('EarWorm', ['ui.router'])
       return post.upvotes.includes(auth.currentUser());
     };
 
+    $scope.timeSince = function(date){
+      return timeSince(date);
+    };
+
     $scope.authoredPost = function(post){
       return post.author === auth.currentUser();
     };
@@ -275,8 +315,52 @@ var app = angular.module('EarWorm', ['ui.router'])
     });
     };
 
-    var modalX = "<div style='margin-top: 20px;' class='icon-box'><i class='material-icons'>&#xE5CD;</i></div>";
+    $scope.editPost = function(post){
+
+      var song = post.song;
+      var caption = post.caption;
+
+      var form =
+      "<span style='margin-top: 10px; text-align: center;'><h2><b>" + auth.currentUser() + "</b> is listening to...</h2></span>" +
+      `<form style="margin-top: 30px;">
+        <div class="form-group" style="float: left; width: 49%">
+          <input id="title" type="text" value="`+song.title+`" placeholder="Title" class="form-control" required>
+          </div>
+        <div class="form-group" style="float: left; margin-left: 2%; width: 49%">
+          <input id="artist" type="text" value="`+song.artist+`" placeholder="Artist" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <input id="caption" style="height: 50px;" type="text" value="`+caption+`" placeholder="Caption" class="form-control">
+        </div>
+      </form>`;
+
+      bootbox.confirm({
+        message: form,
+        buttons: {
+          cancel: {
+            label: 'Cancel'
+          },
+          confirm: {
+            label: 'Edit'
+          }
+        },
+        callback: function(result) {
+          if (result){
+            var newPost = {
+              song: {
+                title: document.getElementById('title').value,
+                artist: document.getElementById('artist').value
+              },
+              caption: document.getElementById('caption').value
+            };
+            posts.editPost(post, newPost);
+        }
+      }
+    });
+  };
+
     $scope.deletePost = function(post){
+      var modalX = "<div style='margin-top: 20px;' class='icon-box'><i class='material-icons'>&#xE5CD;</i></div>";
       bootbox.confirm({
         title: modalX + "<h2 style='text-align: center'><b>Are you sure?</b></h2>",
         message: "<h4 style='text-align: center'>Do you really want to delete this post? This cannot be undone.</h4>",
@@ -302,6 +386,7 @@ var app = angular.module('EarWorm', ['ui.router'])
     $scope.upvotePost = function(post){
       posts.upvotePost(post);
     };
+
 }])
 
 .controller('PostsCtrl', [
@@ -354,6 +439,36 @@ var app = angular.module('EarWorm', ['ui.router'])
       });
     };
 
+    $scope.editComment = function(post, comment){
+
+      var body = comment.body;
+
+      var form =
+      "<span style='margin-top: 10px; text-align: center;'><h2><b>" + auth.currentUser() + " wants to say...</h2></span>" +
+      `<form style="margin-top: 30px;">
+        <div class="form-group">
+          <input id="body" style="height: 50px;" type="text" value="`+body+`" placeholder="Body" class="form-control">
+        </div>
+      </form>`;
+
+      bootbox.confirm({
+        message: form,
+        buttons: {
+          cancel: {
+            label: 'Cancel'
+          },
+          confirm: {
+            label: 'Edit'
+          }
+        },
+        callback: function(result) {
+          if (result){
+            posts.editComment(post, comment, document.getElementById('body').value);
+        }
+      }
+    });
+  };
+
     $scope.upvotePost = function(post){
       posts.upvotePost(post);
     };
@@ -370,32 +485,9 @@ var app = angular.module('EarWorm', ['ui.router'])
       return comment.upvotes.includes(auth.currentUser());
     };
 
-    $scope.timeSince = function(date) {
-
-    var seconds = Math.floor((new Date() - Date.parse(date)) / 1000);
-    var interval = seconds / 31536000;
-
-    if (interval > 1) {
-     return Math.floor(interval) + "y";
-    }
-    interval = seconds / 2592000;
-    if (interval > 1) {
-     return Math.floor(interval) + "mo";
-    }
-    interval = seconds / 86400;
-    if (interval > 1) {
-     return Math.floor(interval) + "d";
-    }
-    interval = seconds / 3600;
-    if (interval > 1) {
-     return Math.floor(interval) + "h";
-    }
-    interval = seconds / 60;
-    if (interval > 1) {
-     return Math.floor(interval) + "m";
-    }
-    return Math.floor(seconds) + "s";
-  };
+    $scope.timeSince = function(date){
+      return timeSince(date);
+    };
 
 }])
 

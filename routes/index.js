@@ -55,7 +55,7 @@ router.post('/posts', auth, function(req, res, next){
   var post = new Post(req.body);
   post.author = req.payload.username;
 
-  post.save(function(err, post){
+  return post.save(function(err, post){
     if (err) { return next(err); }
     res.json(post);
   });
@@ -73,6 +73,18 @@ router.delete('/posts/:post', auth, function(req, res, next){
 router.get('/posts/:post', function(req, res){
   req.post.populate('comments', function(err, post){
     if (err) {return next(err);}
+    res.json(post);
+  });
+});
+
+router.put('/posts/:post', function(req, res, next){
+    var post = req.body[0];
+    var newPost = req.body[1];
+    Post.updateOne({"_id": post._id}, {
+      song: newPost.song,
+      caption: newPost.caption
+    }, {new: true}, function(err){
+    if (err) { return next(err); }
     res.json(post);
   });
 });
@@ -100,6 +112,17 @@ router.post('/posts/:post/comments', auth, function(req, res, next){
       res.json(comment);
     });
   });
+});
+
+router.put('/posts/:post/comments/:comment', function(req, res, next){
+    var comment = req.body[0];
+    var newBody = req.body[1];
+    Comment.updateOne({"_id": comment._id}, {
+      body: newBody
+    }, {new: true}, function(err){
+      if (err) { return next(err); }
+      res.json(comment);
+    });
 });
 
 // Upvote a comment
@@ -156,5 +179,7 @@ router.post('/login', function(req, res, next){
     }
   })(req, res, next);
 });
+
+module.editPost =
 
 module.exports = router;

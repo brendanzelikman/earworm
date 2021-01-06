@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr"
-style="min-width: 100%; min-height: 100%; overflow:hidden">
+style="min-width: 100%; min-height: 100%;">
   <head>
     <meta charset="utf-8">
     <title>EarWorm</title>
@@ -21,8 +21,8 @@ style="min-width: 100%; min-height: 100%; overflow:hidden">
     <script src="/javascripts/angularApp.js"></script>
   <!--  <script src="/javascripts/angularStyle.js"></script> -->
     <style>.glyphicon-thumbs-up {cursor: pointer}
-           .glyphicon-remove {opacity: 0.2}
-           .glyphicon-remove:hover {opacity: 0.5}
+           .glyphicon-remove, .glyphicon-edit {opacity: 0.2}
+           .glyphicon-remove:hover, .glyphicon-edit:hover {opacity: 0.5}
            .postbtn {opacity: 0.75}
            .postbtn:hover {opacity: 1}
            .userform {width: 50%; display: block; margin: 0 auto;}</style>
@@ -39,7 +39,7 @@ style="min-width: 100%; min-height: 100%; overflow:hidden">
       </ul>
     </nav>
 
-    <div class="row" style="overflow-x: auto">
+    <div class="row" style="overflow: auto">
       <div class="col-md-6 col-md-offset-3">
         <ui-view></ui-view>
       </div>
@@ -74,9 +74,15 @@ style="min-width: 100%; min-height: 100%; overflow:hidden">
     <!-- Posts -->
     <div ng-repeat="post in posts | orderBy: '-upvotes.length'"
     style="background-color: #e4ede6; border: 1px solid black; padding: 20px; margin-top: 20px; border-radius: 5px">
-      <!-- Delete Post -->
-      <span style="margin: -10px -10px 0 0; float: right;" class="glyphicon glyphicon-remove"
-      ng-show="authoredPost(post)" ng-click="deletePost(post)"></span>
+      <!-- Post Control -->
+      <div style="float: right; margin: -10px -10px 0 0;">
+        <!-- Edit Comment -->
+        <span class="glyphicon glyphicon-edit"
+        ng-show="authoredPost(post)" ng-click="editPost(post)"></span>
+        <!-- Delete Post -->
+        <span class="glyphicon glyphicon-remove"
+        ng-show="authoredPost(post)" ng-click="deletePost(post)"></span>
+      </div>
       <!-- Author + Title + Artist -->
       <span style="font-size: 20px; font-color: lightgray; float: left">
       <span class="glyphicon glyphicon-volume-up"></span>
@@ -100,7 +106,7 @@ style="min-width: 100%; min-height: 100%; overflow:hidden">
         <a href="#/posts/{{post._id}}">
           <span style="margin-left: 5px; filter: grayscale(100%)" class="glyphicon glyphicon-comment"></span>
         </a>
-        {{post.comments.length}}
+        {{post.comments.length}} | posted {{timeSince(post.createdAt)}} ago
       </span>
     </div>
     <!-- Footer Padding -->
@@ -152,7 +158,8 @@ style="min-width: 100%; min-height: 100%; overflow:hidden">
       <div class="form-group" style="position: relative;">
         <textarea type="text" class="form-control" style="width: 50%;" rows=3
         ng-model="body" required></textarea>
-        <button type="submit" style="position: absolute; height: 33px;top: 50%;margin-top:-16px; left:-65px;"class="btn btn-primary">Post</button>
+        <button type="submit" style="position: absolute; height: 33px; background-color: #edf2ef; color: black;
+        top: 50%; margin-top:-16px; left:-65px; border: 1px solid black;" class="btn btn-primary">Post</button>
       </div>
       <!-- Submit Comment -->
     </form>
@@ -161,9 +168,17 @@ style="min-width: 100%; min-height: 100%; overflow:hidden">
     <div ng-repeat="comment in post.comments | orderBy: '-upvotes.length'"
       style="background-color: #edf2ef; border: 1px solid black; width: 50%;
       padding: 25px; margin-top: 20px; border-radius: 5px; position: relative;">
-      <!-- Delete Comment -->
-      <span style="margin: -10px -10px 0 0; float: right;" class="glyphicon glyphicon-remove"
-      ng-click="deleteComment(comment)" ng-show="authoredComment(comment)"></span>
+      <div>
+        <!-- Comment Control -->
+        <div style="float: right; margin: -15px -15px 0 0;">
+          <!-- Edit Comment -->
+          <span class="glyphicon glyphicon-edit"
+          ng-click="editComment(post, comment)" ng-show="authoredComment(comment)"></span>
+          <!-- Delete Comment -->
+          <span class="glyphicon glyphicon-remove"
+          ng-click="deleteComment(comment)" ng-show="authoredComment(comment)"></span>
+        </div>
+      </div>
       <!-- Upvote Button -->
       <div style="position: absolute; left: -40px; top: 50%; margin-top: -10px;">
         <span style="cursor: pointer" ng-show="isLoggedIn()"
