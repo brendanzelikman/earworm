@@ -58,7 +58,7 @@ var app = angular.module('EarWorm', ['ui.router'])
           post: ['$stateParams', 'posts', function($stateParams, posts){
             return posts.get($stateParams.id);
           }]
-        }
+        },
       })
       .state('login', {
         url: '/login',

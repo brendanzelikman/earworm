@@ -150,8 +150,6 @@ style="min-width: 100%; min-height: 100%;">
     </div>
     <!-- Break -->
     <hr style="border: 1px solid lightgray;">
-    <!-- First Comment Text -->
-    <h3 ng-show="post.comments.length === 0">Be the first to comment.</h3>
     <!-- Add Comment -->
     <form ng-submit="addComment()" ng-show="isLoggedIn()" style="margin-top: 30px;">
       <h3>Thoughts?</h3>
@@ -164,6 +162,8 @@ style="min-width: 100%; min-height: 100%;">
       </div>
       <!-- Submit Comment -->
     </form>
+    <!-- First Comment Text -->
+    <h3 ng-show="post.comments.length === 0">Be the first to comment.</h3>
     <!-- Comments -->
     <h3 ng-show="post.comments.length !== 0">Comments: {{post.comments.length}}</h3>
     <div ng-repeat="comment in post.comments | orderBy: '-upvotes.length'"
