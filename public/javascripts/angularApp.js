@@ -141,7 +141,7 @@ var app = angular.module('EarWorm', ['ui.router'])
     return $http.put('/posts/'+post._id+'/upvote', null, {
       headers: {Authorization: 'Bearer '+auth.getToken()}
     }).success(function(data){
-      var user = auth.currentUser();
+      var user = auth.currentUser().username;
       if (!post.upvotes.includes(user)){
         post.upvotes.push(user);
       } else {
@@ -166,7 +166,7 @@ var app = angular.module('EarWorm', ['ui.router'])
     return $http.put('/posts/'+post._id+'/comments/'+comment._id+'/upvote', null, {
       headers: {Authorization: 'Bearer '+auth.getToken()}
     }).success(function(data){
-      var user = auth.currentUser();
+      var user = auth.currentUser().username;
       if (!comment.upvotes.includes(user)){
         comment.upvotes.push(user);
       } else {
@@ -205,7 +205,7 @@ var app = angular.module('EarWorm', ['ui.router'])
       if (auth.isLoggedIn()){
         var token = auth.getToken();
         var payload = JSON.parse($window.atob(token.split('.')[1]));
-        return payload.username;
+        return payload;
       }
     };
 
@@ -261,10 +261,29 @@ var app = angular.module('EarWorm', ['ui.router'])
 
     $scope.posts = posts.posts;
 
+    $scope.sortedBy = localStorage.getItem('postSortedBy') || "-createdAt";
+
+    $(function() {
+      if (localStorage.getItem('postSelectedSort')) {
+        $("#sortPost option").eq(localStorage.getItem('postSelectedSort')).prop('selected', true);
+      }
+
+      $("#sortPost").on('change', function() {
+        switch($(this).val()){
+          case 'new': $scope.sortedBy = "-createdAt"; break;
+          case 'upvotes': $scope.sortedBy = "-upvotes.length"; break;
+          case 'comments': $scope.sortedBy = "-comments.length"; break;
+        }
+        localStorage.setItem('postSelectedSort', $('option:selected', this).index());
+        localStorage.setItem('postSortedBy', $scope.sortedBy);
+        $scope.$apply();
+      });
+    });
+
     $scope.isLoggedIn = auth.isLoggedIn;
 
     $scope.upvotedPost = function(post){
-      return post.upvotes.includes(auth.currentUser());
+      return post.upvotes.includes(auth.currentUser().username);
     };
 
     $scope.timeSince = function(date){
@@ -272,13 +291,13 @@ var app = angular.module('EarWorm', ['ui.router'])
     };
 
     $scope.authoredPost = function(post){
-      return post.author === auth.currentUser();
+      return post.author === auth.currentUser().username;
     };
 
     $scope.addPost = function(){
 
       var form =
-      "<span style='margin-top: 10px; text-align: center;'><h2><b>" + auth.currentUser() + "</b> is listening to...</h2></span>" +
+      "<span style='margin-top: 10px; text-align: center;'><h2><b>" + auth.currentUser().username + "</b> is listening to...</h2></span>" +
       `<form style="margin-top: 30px;">
         <div class="form-group" style="float: left; width: 49%">
           <input id="title" type="text" placeholder="Title" class="form-control" required>
@@ -321,7 +340,7 @@ var app = angular.module('EarWorm', ['ui.router'])
       var caption = post.caption;
 
       var form =
-      "<span style='margin-top: 10px; text-align: center;'><h2><b>" + auth.currentUser() + "</b> is listening to...</h2></span>" +
+      "<span style='margin-top: 10px; text-align: center;'><h2><b>" + auth.currentUser().username + "</b> is listening to...</h2></span>" +
       `<form style="margin-top: 30px;">
         <div class="form-group" style="float: left; width: 49%">
           <input id="title" type="text" value="`+song.title+`" placeholder="Title" class="form-control" required>
@@ -398,10 +417,29 @@ var app = angular.module('EarWorm', ['ui.router'])
 
     $scope.post = post;
 
+    $scope.sortedBy = localStorage.getItem('commentSortedBy') || "-createdAt";
+
+    $(function() {
+      if (localStorage.getItem('commentSelectedSort')) {
+        $("#sortComment option").eq(localStorage.getItem('commentSelectedSort')).prop('selected', true);
+      }
+
+      $("#sortComment").on('change', function() {
+        switch($(this).val()){
+          case 'new': $scope.sortedBy = "-createdAt"; break;
+          case 'old': $scope.sortedBy = "createdAt"; break;
+          case 'upvotes': $scope.sortedBy = "-upvotes.length"; break;
+        }
+        localStorage.setItem('commentSelectedSort', $('option:selected', this).index());
+        localStorage.setItem('commentSortedBy', $scope.sortedBy);
+        $scope.$apply();
+      });
+    });
+
     $scope.isLoggedIn = auth.isLoggedIn;
 
     $scope.authoredComment = function(comment){
-      return comment.author === auth.currentUser();
+      return comment.author === auth.currentUser().username;
     };
 
     $scope.addComment = function(){
@@ -444,7 +482,7 @@ var app = angular.module('EarWorm', ['ui.router'])
       var body = comment.body;
 
       var form =
-      "<span style='margin-top: 10px; text-align: center;'><h2><b>" + auth.currentUser() + " wants to say...</h2></span>" +
+      "<span style='margin-top: 10px; text-align: center;'><h2><b>" + auth.currentUser().username + " wants to say...</h2></span>" +
       `<form style="margin-top: 30px;">
         <div class="form-group">
           <input id="body" style="height: 50px;" type="text" value="`+body+`" placeholder="Body" class="form-control">
@@ -474,7 +512,7 @@ var app = angular.module('EarWorm', ['ui.router'])
     };
 
     $scope.upvotedPost = function(post){
-      return post.upvotes.includes(auth.currentUser());
+      return post.upvotes.includes(auth.currentUser().username);
     };
 
     $scope.upvoteComment = function(comment){
@@ -482,7 +520,7 @@ var app = angular.module('EarWorm', ['ui.router'])
     };
 
     $scope.upvotedComment = function(comment){
-      return comment.upvotes.includes(auth.currentUser());
+      return comment.upvotes.includes(auth.currentUser().username);
     };
 
     $scope.timeSince = function(date){

@@ -34,7 +34,7 @@ style="min-width: 100%; min-height: 100%;">
 
     <nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
       <ul class="nav navbar-nav">
-        <li ng-show="isLoggedIn()"><a>{{currentUser()}}</a></li>
+        <li ng-show="isLoggedIn()"><a>{{currentUser().username}}</a></li>
         <li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
         <li ng-hide="isLoggedIn()"><a href="/#/login">Log In</a></li>
         <li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
@@ -46,6 +46,7 @@ style="min-width: 100%; min-height: 100%;">
         <ui-view></ui-view>
       </div>
     </div>
+
 
   <!-- TEMPLATES -->
 
@@ -69,12 +70,21 @@ style="min-width: 100%; min-height: 100%;">
       <button type="submit" class="btn btn-primary postbtn"
         style="display: block; margin: 0 auto; width: 50%; padding: 10px; outline-width: 0px;
         background-color: #f0f5f1; color: black; border-radius: 5px; border: 1px solid black;" >
-        What are you listening to, {{currentUser()}}?
+        What are you listening to, {{currentUser().username}}?
       </button>
     </form><br><br><br>
 
+    <!-- Sort Posts -->
+    <div>
+      <span>Sort by: </span>
+      <select id="sortPost" style="margin-left: 5px;">
+        <option value="new" selected="selected">New</option>
+        <option value="upvotes">Upvotes</option>
+        <option value="comments">Comments</option>
+      </select>
+    </div>
     <!-- Posts -->
-    <div ng-repeat="post in posts | orderBy: '-upvotes.length'"
+    <div ng-repeat="post in posts | orderBy: sortedBy"
     style="background-color: #e4ede6; border: 1px solid black; padding: 20px; margin-top: 20px; border-radius: 5px">
       <!-- Post Control -->
       <div style="float: right; margin: -10px -10px 0 0;">
@@ -164,9 +174,19 @@ style="min-width: 100%; min-height: 100%;">
     </form>
     <!-- First Comment Text -->
     <h3 ng-show="post.comments.length === 0">Be the first to comment.</h3>
+    <!-- Sort Comments -->
+    <br>
+    <div>
+      <span>Sort by: </span>
+      <select id="sortComment" style="margin-left: 5px;">
+        <option value="new" selected="selected">New</option>
+        <option value="old">Old</option>
+        <option value="upvotes">Upvotes</option>
+      </select>
+    </div>
     <!-- Comments -->
     <h3 ng-show="post.comments.length !== 0">Comments: {{post.comments.length}}</h3>
-    <div ng-repeat="comment in post.comments | orderBy: '-upvotes.length'"
+    <div ng-repeat="comment in post.comments | orderBy: sortedBy"
       style="background-color: #edf2ef; border: 1px solid black; width: 50%;
       padding: 25px; margin-top: 20px; border-radius: 5px; position: relative;">
       <div>
