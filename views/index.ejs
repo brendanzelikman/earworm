@@ -163,8 +163,8 @@ style="min-width: 100%; min-height: 100%;">
       <h3>Thoughts?</h3>
       <!-- Comment Body -->
       <div class="form-group" style="position: relative;">
-        <textarea type="text" class="form-control" style="width: 50%;" rows=3
-        ng-model="body" required></textarea>
+        <textarea type="text" class="form-control" style="width: 50%; resize: none;"
+         rows=3 ng-model="body" required></textarea>
         <button type="submit" style="position: absolute; height: 33px; background-color: #edf2ef; color: black;
         top: 50%; margin-top:-16px; left:-65px; border: 1px solid black;" class="btn btn-primary">Post</button>
       </div>
@@ -273,10 +273,10 @@ style="min-width: 100%; min-height: 100%;">
           <br><br>
           <p>
             <span class="bolditalic" style="float: left;">Bio:</span>
-            <input class="italic" style="float: right;" type="text" value="{{user.bio}}"
-            placeholder="Bio" id="editBio"></input>
+            <textarea class="italic" style="float: right; resize: none;" type="text"
+             value="{{user.bio}}" placeholder="Bio" id="editBio" rows="2"></textarea>
           </p>
-          <br><br>
+          <br><br><br>
           <p>
             <span class="bolditalic" style="float: left;">Favorite song:</span>
             <input class="italic" style="float: right;" type="text" value="{{user.favSong}}"
