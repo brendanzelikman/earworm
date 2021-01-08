@@ -50,6 +50,50 @@ router.param('comment', function(req, res, next, id){
   });
 });
 
+// Preload comment objects on routes with ':comment'
+router.param('user', function(req, res, next, id){
+  var query = User.findById(id);
+
+  query.exec(function(err, user){
+    if (err) { return next(err); }
+    if (!user) { return next(new Error("Can\'t find user!")); }
+
+    req.user = user;
+    return next();
+  });
+});
+
+router.get('/users/:id', function(req, res, next){
+  User.findById(req.params.id, function(err, user){
+    if (err) { return next(err); }
+    res.json(user);
+  });
+});
+
+router.post('/users', auth, function(req, res, next){
+  var user = new User(req.body);
+
+  return user.save(function(err, user){
+    if (err) { return next(err); }
+    res.json(user);
+  });
+});
+
+router.put('/users/:user', function(req, res, next){
+    var user = req.body[0];
+    var newUser = req.body[1];
+    User.updateOne({"_id": user._id}, {
+      image: newUser.image,
+      bio: newUser.bio,
+      favSong: newUser.favSong,
+      favArtist: newUser.favArtist
+    }, {new: true}, function(err){
+    if (err) { return next(err); }
+    res.json(user);
+  });
+});
+
+
 // Create post
 router.post('/posts', auth, function(req, res, next){
   var post = new Post(req.body);
@@ -179,7 +223,5 @@ router.post('/login', function(req, res, next){
     }
   })(req, res, next);
 });
-
-module.editPost =
 
 module.exports = router;

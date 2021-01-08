@@ -5,6 +5,10 @@ var env = require('dotenv').config();
 
 var UserSchema = new mongoose.Schema({
   username: {type: String, unique: true},
+  image: {type: String, default:"images/defaultuser.png"},
+  bio: String,
+  favSong: String,
+  favArtist: String,
   hash: String,
   salt: String
 });

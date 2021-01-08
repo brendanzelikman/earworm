@@ -50,6 +50,16 @@ var app = angular.module('EarWorm', ['ui.router'])
           }]
         }
       })
+      .state('users', {
+        url: '/users/{id}',
+        templateUrl: '/users.html',
+        controller: 'UserCtrl',
+        resolve: {
+          user: ['$stateParams', 'users', function($stateParams, users){
+            return users.get($stateParams.id);
+          }]
+        }
+      })
       .state('posts', {
         url: '/posts/{id}',
         templateUrl: '/posts.html',
@@ -79,13 +89,41 @@ var app = angular.module('EarWorm', ['ui.router'])
             $state.go('home');
           }
         }]
-    })
-      .state('user', {
-        url: '/user',
-        templateUrl: '/user.html',
-        controller: 'UserCtrl'
-      });
+    });
     $urlRouterProvider.otherwise('home');
+}])
+
+.factory('users', ['$http', 'auth', function($http, auth){
+
+  var o = {
+    users: []
+  };
+
+  o.get = function(id){
+    return $http.get('/users/'+id).then(function(res){
+      return res.data;
+    });
+  };
+
+  o.getAll = function() {
+   return $http.get('/users').success(function(data) {
+      angular.copy(data, o.users);
+    });
+  };
+
+  o.create = function(user){
+    return $http.post('/users', user, {
+      headers: {Authorization: 'Bearer '+auth.getToken()}
+    }).success(function(data){
+      o.users.push(data);
+    });
+  };
+
+  o.editUser = function(user, newUser){
+    $http.put('/users/'+user._id, [user, newUser]);
+  };
+
+  return o;
 }])
 
 .factory('posts', ['$http', 'auth', function($http, auth){
@@ -125,7 +163,6 @@ var app = angular.module('EarWorm', ['ui.router'])
 
   o.editPost = function(post, newPost){
     $http.put('/posts/'+post._id, [post, newPost]);
-    location.reload();
   };
 
   o.deleteComment = function(post, comment){
@@ -212,6 +249,7 @@ var app = angular.module('EarWorm', ['ui.router'])
     auth.register = function(user){
       return $http.post('/register', user).success(function(data){
         auth.saveToken(data.token);
+
         $window.location.reload();
       }).catch((err) => {
         if (err.data.substring(4, 10) === "E11000"){
@@ -246,7 +284,10 @@ var app = angular.module('EarWorm', ['ui.router'])
         onEscape: true,
         backdrop: true,
         callback: function(result){
-          if (result) { $window.localStorage.removeItem('earworm-token'); $window.location.reload(); }
+          if (result) {
+            $window.localStorage.removeItem('earworm-token');
+            $window.location.reload();
+          }
         }
       });
     };
@@ -256,10 +297,12 @@ var app = angular.module('EarWorm', ['ui.router'])
 .controller('MainCtrl', [
   '$scope',
   'posts',
+  'users',
   'auth',
-  function($scope, posts, auth){
+  function($scope, posts, users, auth){
 
     $scope.posts = posts.posts;
+    $scope.users = users.users;
 
     $scope.sortedBy = localStorage.getItem('postSortedBy') || "-createdAt";
 
@@ -408,6 +451,64 @@ var app = angular.module('EarWorm', ['ui.router'])
 
 }])
 
+.controller('UserCtrl', [
+  '$scope',
+  'users',
+  'user',
+  'auth',
+  function($scope, users, user, auth){
+    $scope.user = user;
+    $scope.isUser = function(){
+      var authUser = auth.currentUser();
+      if (authUser) return user.username === authUser.username;
+      return false;
+    };
+    $scope.editUser = function(user, field){
+
+        var value, placeholder;
+        switch (field){
+          case "bio": value = user.bio; placeholder = "Bio"; break;
+          case "favSong": value = user.favSong; placeholder = "Favorite Song"; break;
+          case "favArtist": value = user.favArtist; placeholder = "Favorite Artist"; break;
+          case "image": value = user.image; placeholder = "Image URL"; break;
+        }
+
+        var form =
+        "<span style='margin-top: 10px; text-align: center;'><h2><b>Update "+placeholder+`?</h2></span>
+        <form style="margin-top: 30px;">
+          <div class="form-group">
+            <input id="field" style="height: 50px;" type="text" value="`+value+`" placeholder="`+placeholder+`" class="form-control">
+          </div>
+        </form>`;
+
+        bootbox.confirm({
+          message: form,
+          buttons: {
+            cancel: {
+              label: 'Cancel'
+            },
+            confirm: {
+              label: 'Update'
+            }
+          },
+          callback: function(result) {
+            if (result){
+              var newUser = user;
+              value = document.getElementById('field').value;
+              switch (field){
+                case "bio": newUser.bio = value; break;
+                case "favSong": newUser.favSong = value; break;
+                case "favArtist": newUser.favArtist = value; break;
+                case "image": newUser.image = value; break;
+              }
+              users.editUser(user, newUser);
+          }
+        }
+      });
+    };
+  }
+])
+
 .controller('PostsCtrl', [
   '$scope',
   'posts',
@@ -542,8 +643,9 @@ var app = angular.module('EarWorm', ['ui.router'])
 .controller('AuthCtrl', [
   '$scope',
   '$state',
+  'users',
   'auth',
-  function($scope, $state, auth){
+  function($scope, $state, users, auth){
 
     $scope.user = {};
 
@@ -551,6 +653,7 @@ var app = angular.module('EarWorm', ['ui.router'])
       auth.register($scope.user).error(function(error){
         $scope.error = error;
       }).then(function(){
+        users.create($scope.user);
         $state.go('home');
       });
     };

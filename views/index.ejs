@@ -27,14 +27,15 @@ style="min-width: 100%; min-height: 100%;">
            .postbtn:hover {opacity: 1}
            .userform {width: 50%; display: block; margin: 0 auto;}
            .bold {font-family: SourceSansPro-Bold}
-           .italic {font-family: SourceSansPro-Italic}</style>
+           .italic {font-family: SourceSansPro-Italic}
+           .bolditalic {font-family: SourceSansPro-BoldItalic}</style>
   </head>
 
   <body ng-app="EarWorm" style="background: linear-gradient(180deg, white, lightgray); font-family: SourceSansPro" class="image">
 
     <nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
       <ul class="nav navbar-nav">
-        <li ng-show="isLoggedIn()"><a>{{currentUser().username}}</a></li>
+        <li ng-show="isLoggedIn()"><a href="/#/users/{{currentUser()._id}}">{{currentUser().username}}</a></li>
         <li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
         <li ng-hide="isLoggedIn()"><a href="/#/login">Log In</a></li>
         <li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
@@ -75,7 +76,7 @@ style="min-width: 100%; min-height: 100%;">
     </form><br><br><br>
 
     <!-- Sort Posts -->
-    <div>
+    <div ng-show="posts.length > 0">
       <span>Sort by: </span>
       <select id="sortPost" style="margin-left: 5px;">
         <option value="new" selected="selected">New</option>
@@ -98,7 +99,7 @@ style="min-width: 100%; min-height: 100%;">
       <!-- Author + Title + Artist -->
       <span style="font-size: 20px; font-color: lightgray; float: left">
       <span class="glyphicon glyphicon-volume-up"></span>
-      <a href="#/user/{{user._id}}" style="color:black">{{post.author}}</a>
+      <a href="#/users/{{user._id}}" style="color:black">{{post.author}}</a>
        is listening to <b class="bold">{{post.song.title}}</b> - <i class="italic">{{post.song.artist}}</i></span>
       <br/><br/>
       <!-- Caption -->
@@ -128,7 +129,7 @@ style="min-width: 100%; min-height: 100%;">
   <script type="text/ng-template" id="/posts.html">
     <!-- Logo -->
     <div class="page-header">
-      <a href="#/home"><img src="/images/logo.png" style = "width: 33%"></a>
+      <a href="#/home"><img src="/images/logo.png" style = "width: 50%;"></a>
     </div>
     <!-- Post Info -->
     <div>
@@ -229,11 +230,55 @@ style="min-width: 100%; min-height: 100%;">
     <div style="height: 5%; padding: 5%"></div>
   </script>
 
-    <!-- Template - Register -->
+  <!-- Template - User -->
+  <script type="text/ng-template" id="/users.html">
+    <!-- Logo -->
+    <div class="page-header">
+      <a href="#/home"><img src="/images/logo.png" style = "width: 50%"></a>
+    </div>
+    <!-- User Info -->
+    <div style="margin-top: 50px; text-align: center;">
+      <!-- Profile Picture -->
+      <img style="border-radius: 50%; width: 150px; height: 150px;
+      border: 1px solid black;" ng-src="{{user.image}}" alt="Profile Picture">
+      <!-- Username -->
+      <span><h2>{{user.username}} </h2></span>
+      <br>
+      <div style="width: 75%; display: inline-block;">
+          <h4 class="italic">"{{user.bio}}"
+            <span style="height: 20px; width: 20px;" class="glyphicon glyphicon-edit"
+            ng-click="editUser(user, 'bio')" ng-show="isUser()"></span>
+          </h4>
+
+        <br>
+        <!-- Favorite Song -->
+        <p>
+          <span class="bolditalic" style="float: left; font-size: 20px;">Favorite song:</span>
+          <span style="float: right; position: relative;">
+            <span class="italic" style="font-size: 20px;">{{user.favSong}}</span>
+            <span style="position: absolute; right: -20px;" class="glyphicon glyphicon-edit"
+            ng-click="editUser(user, 'favSong')" ng-show="isUser()"></span>
+          </span>
+        </p>
+        <br>
+        <!-- Favorite Artist -->
+        <p>
+          <span class="bolditalic" style="float: left; font-size: 20px;">Favorite artist:</span>
+          <span style="float: right; position: relative;">
+            <span class="italic" style="font-size: 20px;">{{user.favArtist}}</span>
+            <span style="position: absolute; right: -20px;" class="glyphicon glyphicon-edit"
+            ng-click="editUser(user, 'favArtist')" ng-show="isUser()"></span>
+          </span>
+        </p>
+      </div>
+    </div>
+  </script>
+
+  <!-- Template - Register -->
   <script type="text/ng-template" id="/register.html">
     <!-- Logo -->
     <div class="page-header" style="text-align: center;">
-      <a href="#/home"><img src="/images/logo.png" style = "width: 33%"></a>
+      <a href="#/home"><img src="/images/logo.png" style = "width: 50%;"></a>
     </div>
     <!-- Error Message -->
     <div ng-show="error" class="alert-danger row">
@@ -265,7 +310,7 @@ style="min-width: 100%; min-height: 100%;">
   <script type="text/ng-template" id="/login.html">
     <!-- Logo -->
     <div class="page-header" style="text-align: center;">
-      <a href="#/home"><img src="/images/logo.png" style = "width: 33%"></a>
+      <a href="#/home"><img src="/images/logo.png" style = "width: 50%"></a>
     </div>
     <!-- Error Message -->
     <div ng-show="error" class="alert-danger row">
@@ -291,13 +336,6 @@ style="min-width: 100%; min-height: 100%;">
       border-color: black; background-color: #1DB954"
       type="submit" class="btn btn-primary">Log In</button>
     </form>
-  </script>
-
-  <script type="text/ng-template" id="/user.html">
-    <!-- Logo -->
-    <div class="page-header" style="text-align: center;">
-      <a href="#/home"><img src="/images/logo.png" style = "width: 33%"></a>
-    </div>
   </script>
 
   </body>

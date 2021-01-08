@@ -45,3 +45,8 @@ src: url('../fonts/SourceSansPro-Bold.ttf');
 font-family: 'SourceSansPro-Italic';
 src: url('../fonts/SourceSansPro-Italic.ttf');
 }
+
+@font-face {
+font-family: 'SourceSansPro-BoldItalic';
+src: url('../fonts/SourceSansPro-BoldItalic.ttf');
+}
