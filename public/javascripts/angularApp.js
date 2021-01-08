@@ -463,48 +463,28 @@ var app = angular.module('EarWorm', ['ui.router'])
       if (authUser) return user.username === authUser.username;
       return false;
     };
-    $scope.editUser = function(user, field){
 
-        var value, placeholder;
-        switch (field){
-          case "bio": value = user.bio; placeholder = "Bio"; break;
-          case "favSong": value = user.favSong; placeholder = "Favorite Song"; break;
-          case "favArtist": value = user.favArtist; placeholder = "Favorite Artist"; break;
-          case "image": value = user.image; placeholder = "Image URL"; break;
-        }
+    $scope.editing = false;
 
-        var form =
-        "<span style='margin-top: 10px; text-align: center;'><h2><b>Update "+placeholder+`?</h2></span>
-        <form style="margin-top: 30px;">
-          <div class="form-group">
-            <input id="field" style="height: 50px;" type="text" value="`+value+`" placeholder="`+placeholder+`" class="form-control">
-          </div>
-        </form>`;
+    $scope.startEditing = function(user){
+      $scope.editing = true;
+      document.getElementById('editImage').value =
+        (user.image === "images/defaultuser.png") ? "" : user.image;
+    };
 
-        bootbox.confirm({
-          message: form,
-          buttons: {
-            cancel: {
-              label: 'Cancel'
-            },
-            confirm: {
-              label: 'Update'
-            }
-          },
-          callback: function(result) {
-            if (result){
-              var newUser = user;
-              value = document.getElementById('field').value;
-              switch (field){
-                case "bio": newUser.bio = value; break;
-                case "favSong": newUser.favSong = value; break;
-                case "favArtist": newUser.favArtist = value; break;
-                case "image": newUser.image = value; break;
-              }
-              users.editUser(user, newUser);
-          }
-        }
-      });
+    $scope.cancelEdit = function(){
+      $scope.editing = false;
+    };
+
+    $scope.saveEdit = function(user){
+      var newUser = user;
+      var imageURL = document.getElementById('editImage').value;
+      newUser.image = imageURL ? imageURL : "images/defaultuser.png";
+      newUser.bio = document.getElementById('editBio').value;
+      newUser.favSong = document.getElementById('editSong').value;
+      newUser.favArtist = document.getElementById('editArtist').value;
+      users.editUser(user, newUser);
+      $scope.editing = false;
     };
   }
 ])

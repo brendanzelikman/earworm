@@ -101,10 +101,10 @@ style="min-width: 100%; min-height: 100%;">
       <span class="glyphicon glyphicon-volume-up"></span>
       <a href="#/users/{{user._id}}" style="color:black">{{post.author}}</a>
        is listening to <b class="bold">{{post.song.title}}</b> - <i class="italic">{{post.song.artist}}</i></span>
-      <br/><br/>
+      <br><br>
       <!-- Caption -->
       <span style="font-size: 15px; margin-left: 20px">{{post.caption}}</span>
-      <br/>
+      <br>
       <!-- Media -->
       <span style="float: right">
         <!-- Upvote Button -->
@@ -177,7 +177,7 @@ style="min-width: 100%; min-height: 100%;">
     <h3 ng-show="post.comments.length === 0">Be the first to comment.</h3>
     <!-- Sort Comments -->
     <br>
-    <div>
+    <div ng-show="post.comments.length > 0">
       <span>Sort by: </span>
       <select id="sortComment" style="margin-left: 5px;">
         <option value="new" selected="selected">New</option>
@@ -239,37 +239,63 @@ style="min-width: 100%; min-height: 100%;">
     <!-- User Info -->
     <div style="margin-top: 50px; text-align: center;">
       <!-- Profile Picture -->
-      <img style="border-radius: 50%; width: 150px; height: 150px;
-      border: 1px solid black;" ng-src="{{user.image}}" alt="Profile Picture">
+      <img id="profilePicture" style="border-radius: 50%; width: 200px; height: 200px;
+      border: 1px solid black;" ng-src="{{user.image}}"
+      onerror="document.getElementById('profilePicture').src='images/defaultuser.png'">
       <!-- Username -->
       <span><h2>{{user.username}} </h2></span>
       <br>
-      <div style="width: 75%; display: inline-block;">
-          <h4 class="italic">"{{user.bio}}"
-            <span style="height: 20px; width: 20px;" class="glyphicon glyphicon-edit"
-            ng-click="editUser(user, 'bio')" ng-show="isUser()"></span>
-          </h4>
-
+      <!-- Favorites -->
+      <div style="width: 75%; display: inline-block; font-size: 20px;" ng-hide="editing">
+        <!-- Bio -->
+        <h4 class="italic">"{{user.bio}}"</h4>
         <br>
         <!-- Favorite Song -->
         <p>
-          <span class="bolditalic" style="float: left; font-size: 20px;">Favorite song:</span>
-          <span style="float: right; position: relative;">
-            <span class="italic" style="font-size: 20px;">{{user.favSong}}</span>
-            <span style="position: absolute; right: -20px;" class="glyphicon glyphicon-edit"
-            ng-click="editUser(user, 'favSong')" ng-show="isUser()"></span>
-          </span>
+          <span class="bolditalic" style="float: left;">Favorite song:</span>
+          <span class="italic" style="float: right;">{{user.favSong}}</span>
         </p>
         <br>
         <!-- Favorite Artist -->
         <p>
-          <span class="bolditalic" style="float: left; font-size: 20px;">Favorite artist:</span>
-          <span style="float: right; position: relative;">
-            <span class="italic" style="font-size: 20px;">{{user.favArtist}}</span>
-            <span style="position: absolute; right: -20px;" class="glyphicon glyphicon-edit"
-            ng-click="editUser(user, 'favArtist')" ng-show="isUser()"></span>
-          </span>
+          <span class="bolditalic" style="float: left;">Favorite artist:</span>
+          <span class="italic" style="float: right;">{{user.favArtist}}</span>
         </p>
+        <br><br>
+        <button style="display: inline-block;" ng-click="startEditing(user)"
+        ng-show="isUser()">Edit Profile</button>
+      </div>
+
+      <div style="width: 75%; display: inline-block; font-size: 20px;" ng-show="editing">
+        <form>
+          <p>
+            <span class="bolditalic" style="float: left;">Image URL:</span>
+            <input class="italic" style="float: right;" type="text"
+            placeholder="Image URL" id="editImage"></input>
+          </p>
+          <br><br>
+          <p>
+            <span class="bolditalic" style="float: left;">Bio:</span>
+            <input class="italic" style="float: right;" type="text" value="{{user.bio}}"
+            placeholder="Bio" id="editBio"></input>
+          </p>
+          <br><br>
+          <p>
+            <span class="bolditalic" style="float: left;">Favorite song:</span>
+            <input class="italic" style="float: right;" type="text" value="{{user.favSong}}"
+            placeholder="Favorite Song" id="editSong"></input>
+          </p>
+          <br>
+          <p>
+            <span class="bolditalic" style="float: left;">Favorite artist:</span>
+            <input class="italic" style="float: right;" type="text" value="{{user.favArtist}}"
+            placeholder="Favorite Artist" id="editArtist"></input>
+          </p>
+          <br><br>
+          <button style="display: inline-block; margin-right: 5px;" ng-click="cancelEdit()"
+          ng-show="isUser()">Cancel</button>
+          <button style="display: inline-block; margin-left: 5px" ng-click="saveEdit(user)"
+          ng-show="isUser()">Save</button>
       </div>
     </div>
   </script>
@@ -318,7 +344,7 @@ style="min-width: 100%; min-height: 100%;">
     </div>
     <!-- Log In Form -->
     <form ng-submit="logIn()" style="margin-top:30px; text-align: center;">
-      <h3 class="bold"><b>Log in to EarWorm</b></h3><br/>
+      <h3 class="bold"><b>Log in to EarWorm</b></h3><br>
       <!-- Register --->
       <a href="#/register"><h5 style-"text-align: center;">Don't have an account yet?</h5></a>
       <!-- Username -->
