@@ -51,12 +51,12 @@ var app = angular.module('EarWorm', ['ui.router'])
         }
       })
       .state('users', {
-        url: '/users/{id}',
+        url: '/users/{username}',
         templateUrl: '/users.html',
         controller: 'UserCtrl',
         resolve: {
           user: ['$stateParams', 'users', function($stateParams, users){
-            return users.get($stateParams.id);
+            return users.get($stateParams.username);
           }]
         }
       })
@@ -99,8 +99,8 @@ var app = angular.module('EarWorm', ['ui.router'])
     users: []
   };
 
-  o.get = function(id){
-    return $http.get('/users/'+id).then(function(res){
+  o.get = function(username){
+    return $http.get('/users/'+username).then(function(res){
       return res.data;
     });
   };
@@ -326,7 +326,8 @@ var app = angular.module('EarWorm', ['ui.router'])
     $scope.isLoggedIn = auth.isLoggedIn;
 
     $scope.upvotedPost = function(post){
-      return post.upvotes.includes(auth.currentUser().username);
+      return auth.currentUser() ?
+      post.upvotes.includes(auth.currentUser().username) : false;
     };
 
     $scope.timeSince = function(date){
@@ -470,6 +471,8 @@ var app = angular.module('EarWorm', ['ui.router'])
       $scope.editing = true;
       document.getElementById('editImage').value =
         (user.image === "images/defaultuser.png") ? "" : user.image;
+      document.getElementById('editBio').value =
+        (user.bio === "I love EarWorm!") ? "" : user.bio;
     };
 
     $scope.cancelEdit = function(){
@@ -480,7 +483,8 @@ var app = angular.module('EarWorm', ['ui.router'])
       var newUser = user;
       var imageURL = document.getElementById('editImage').value;
       newUser.image = imageURL ? imageURL : "images/defaultuser.png";
-      newUser.bio = document.getElementById('editBio').value;
+      var bio = document.getElementById('editBio').value;
+      newUser.bio = bio ? bio : "I love EarWorm!";
       newUser.favSong = document.getElementById('editSong').value;
       newUser.favArtist = document.getElementById('editArtist').value;
       users.editUser(user, newUser);
@@ -593,7 +597,8 @@ var app = angular.module('EarWorm', ['ui.router'])
     };
 
     $scope.upvotedPost = function(post){
-      return post.upvotes.includes(auth.currentUser().username);
+      return auth.currentUser() ?
+      post.upvotes.includes(auth.currentUser().username) : false;
     };
 
     $scope.upvoteComment = function(comment){
@@ -601,7 +606,8 @@ var app = angular.module('EarWorm', ['ui.router'])
     };
 
     $scope.upvotedComment = function(comment){
-      return comment.upvotes.includes(auth.currentUser().username);
+      return auth.currentUser() ?
+      comment.upvotes.includes(auth.currentUser().username) : false;
     };
 
     $scope.timeSince = function(date){

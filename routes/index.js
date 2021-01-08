@@ -63,8 +63,8 @@ router.param('user', function(req, res, next, id){
   });
 });
 
-router.get('/users/:id', function(req, res, next){
-  User.findById(req.params.id, function(err, user){
+router.get('/users/:username', function(req, res, next){
+  User.findOne({username: req.params.username}, function(err, user){
     if (err) { return next(err); }
     res.json(user);
   });
@@ -82,7 +82,7 @@ router.post('/users', auth, function(req, res, next){
 router.put('/users/:user', function(req, res, next){
     var user = req.body[0];
     var newUser = req.body[1];
-    User.updateOne({"_id": user._id}, {
+    User.updateOne({"username": user.username}, {
       image: newUser.image,
       bio: newUser.bio,
       favSong: newUser.favSong,
