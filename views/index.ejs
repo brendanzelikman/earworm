@@ -235,31 +235,43 @@ style="min-width: 100%; min-height: 100%;">
     </div>
     <!-- User Info -->
     <div style="margin-top: 50px; text-align: center;">
+
+      <div style="border-radius: 5px; background-color: #f0f5f1; border: 1px solid black; cursor: pointer;
+      width: 200px; display: inline-block; padding: 2.5px;" ng-hide="followingProfile()" ng-click="followUser()">
+        <h4>Follow<h4>
+      </div>
+
+      <div style="border-radius: 5px; background-color: #e8ebe9; border: 1px solid black; cursor: pointer;
+      width: 200px; display: inline-block; padding: 2.5px;" ng-show="followingProfile()" ng-click="followUser()">
+        <h4>Following<h4>
+      </div>
+
+      <br><br>
       <!-- Profile Picture -->
       <img id="profilePicture" style="border-radius: 50%; width: 200px; height: 200px;
-      border: 1px solid black;" ng-src="{{user.image}}"
+      border: 1px solid black;" ng-src="{{profile.image}}"
       onerror="document.getElementById('profilePicture').src='images/defaultuser.png'">
       <!-- Username -->
-      <span><h2>{{user.username}} </h2></span>
+      <span><h2>{{profile.username}} </h2></span>
       <br>
       <!-- Favorites -->
       <div style="width: 75%; display: inline-block; font-size: 20px;" ng-hide="editing">
         <!-- Bio -->
-        <h4 class="italic">"{{user.bio}}"</h4>
+        <h4 class="italic">"{{profile.bio}}"</h4>
         <br>
         <!-- Favorite Song -->
         <p>
           <span class="bolditalic" style="float: left;">Favorite song:</span>
-          <span class="italic" style="float: right;">{{user.favSong}}</span>
+          <span class="italic" style="float: right;">{{profile.favSong}}</span>
         </p>
         <br>
         <!-- Favorite Artist -->
         <p>
           <span class="bolditalic" style="float: left;">Favorite artist:</span>
-          <span class="italic" style="float: right;">{{user.favArtist}}</span>
+          <span class="italic" style="float: right;">{{profile.favArtist}}</span>
         </p>
         <br><br>
-        <button style="display: inline-block;" ng-click="startEditing(user)"
+        <button style="display: inline-block;" ng-click="startEditing(profile)"
         ng-show="isUser()">Edit Profile</button>
       </div>
 
@@ -274,27 +286,29 @@ style="min-width: 100%; min-height: 100%;">
           <p>
             <span class="bolditalic" style="float: left;">Bio:</span>
             <textarea class="italic" style="float: right; resize: none;" type="text"
-             value="{{user.bio}}" placeholder="Bio" id="editBio" rows="2"></textarea>
+             value="{{profile.bio}}" placeholder="Bio" id="editBio" rows="2"></textarea>
           </p>
           <br><br><br>
           <p>
             <span class="bolditalic" style="float: left;">Favorite song:</span>
-            <input class="italic" style="float: right;" type="text" value="{{user.favSong}}"
+            <input class="italic" style="float: right;" type="text" value="{{profile.favSong}}"
             placeholder="Favorite Song" id="editSong"></input>
           </p>
           <br>
           <p>
             <span class="bolditalic" style="float: left;">Favorite artist:</span>
-            <input class="italic" style="float: right;" type="text" value="{{user.favArtist}}"
+            <input class="italic" style="float: right;" type="text" value="{{profile.favArtist}}"
             placeholder="Favorite Artist" id="editArtist"></input>
           </p>
           <br><br>
           <button style="display: inline-block; margin-right: 5px;" ng-click="cancelEdit()"
           ng-show="isUser()">Cancel</button>
-          <button style="display: inline-block; margin-left: 5px" ng-click="saveEdit(user)"
+          <button style="display: inline-block; margin-left: 5px" ng-click="saveEdit(profile)"
           ng-show="isUser()">Save</button>
       </div>
     </div>
+    <!-- Footer Padding -->
+    <div style="height: 5%; padding: 5%"></div>
   </script>
 
   <!-- Template - Register -->

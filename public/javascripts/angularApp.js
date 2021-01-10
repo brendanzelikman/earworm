@@ -1,5 +1,4 @@
 /* TO-DO LIST:
- - profile page
  - friends list
  - SPOTIFY API
  */
@@ -123,6 +122,19 @@ var app = angular.module('EarWorm', ['ui.router'])
     $http.put('/users/'+user._id, [user, newUser]);
   };
 
+  o.follow = function(user, follow){
+    return $http.put('/users/'+follow.username+"/follow", null, {
+      headers: {Authorization: 'Bearer '+auth.getToken()}
+    }).success(function(data){
+      if (!user.following.includes(follow.username)){
+        user.following.push(follow.username);
+      } else {
+        var index = user.following.indexOf(follow.username);
+        user.following.splice(index, 1);
+      }
+    });
+  };
+
   return o;
 }])
 
@@ -229,7 +241,6 @@ var app = angular.module('EarWorm', ['ui.router'])
 
     auth.isLoggedIn = function(){
       var token = auth.getToken();
-
       if (token){
         var payload = JSON.parse($window.atob(token.split('.')[1]));
         return payload.exp > Date.now() / 1000;
@@ -248,11 +259,10 @@ var app = angular.module('EarWorm', ['ui.router'])
 
     auth.register = function(user){
       return $http.post('/register', user).success(function(data){
-        auth.saveToken(data.token);
-
+        auth.saveToken(data.user.token);
         $window.location.reload();
       }).catch((err) => {
-        if (err.data.substring(4, 10) === "E11000"){
+        if (err.data.contains("E11000")){
           bootbox.alert({
             message: '<h2 style="text-align: center"><b>Username already taken!</b></h2>',
             backdrop: true
@@ -263,7 +273,7 @@ var app = angular.module('EarWorm', ['ui.router'])
 
     auth.logIn = function(user){
       return $http.post('/login', user).success(function(data){
-        auth.saveToken(data.token);
+        auth.saveToken(data.user.token);
       });
     };
 
@@ -458,38 +468,48 @@ var app = angular.module('EarWorm', ['ui.router'])
   'user',
   'auth',
   function($scope, users, user, auth){
-    $scope.user = user;
-    $scope.isUser = function(){
-      var authUser = auth.currentUser();
-      if (authUser) return user.username === authUser.username;
-      return false;
-    };
 
+    $scope.profile = user;
     $scope.editing = false;
 
-    $scope.startEditing = function(user){
-      $scope.editing = true;
-      document.getElementById('editImage').value =
-        (user.image === "images/defaultuser.png") ? "" : user.image;
-      document.getElementById('editBio').value =
-        (user.bio === "I love EarWorm!") ? "" : user.bio;
-    };
+    users.get(auth.currentUser().username).then(function(user){
 
-    $scope.cancelEdit = function(){
-      $scope.editing = false;
-    };
+        $scope.isUser = function(){
+          return $scope.profile.username === user.username;
+        };
 
-    $scope.saveEdit = function(user){
-      var newUser = user;
-      var imageURL = document.getElementById('editImage').value;
-      newUser.image = imageURL ? imageURL : "images/defaultuser.png";
-      var bio = document.getElementById('editBio').value;
-      newUser.bio = bio ? bio : "I love EarWorm!";
-      newUser.favSong = document.getElementById('editSong').value;
-      newUser.favArtist = document.getElementById('editArtist').value;
-      users.editUser(user, newUser);
-      $scope.editing = false;
-    };
+        $scope.followUser = function(){
+          users.follow(user, $scope.profile);
+        };
+
+        $scope.followingProfile = function(){
+          return user ? user.following.includes($scope.profile.username) : false;
+        };
+
+        $scope.startEditing = function(user){
+          $scope.editing = true;
+          document.getElementById('editImage').value =
+            (user.image === "images/defaultuser.png") ? "" : user.image;
+          document.getElementById('editBio').value =
+            (user.bio === "I love EarWorm!") ? "" : user.bio;
+        };
+
+        $scope.cancelEdit = function(){
+          $scope.editing = false;
+        };
+
+        $scope.saveEdit = function(user){
+          var newUser = user;
+          var imageURL = document.getElementById('editImage').value;
+          newUser.image = imageURL ? imageURL : "images/defaultuser.png";
+          var bio = document.getElementById('editBio').value;
+          newUser.bio = bio ? bio : "I love EarWorm!";
+          newUser.favSong = document.getElementById('editSong').value;
+          newUser.favArtist = document.getElementById('editArtist').value;
+          users.editUser(user, newUser);
+          $scope.editing = false;
+        };
+      });
   }
 ])
 

@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 var env = require('dotenv').config();
+var secret = process.env.KEY;
 
 var UserSchema = new mongoose.Schema({
   username: {type: String, unique: true},
@@ -9,9 +10,25 @@ var UserSchema = new mongoose.Schema({
   bio: {type: String, default : "I love EarWorm!"},
   favSong: String,
   favArtist: String,
+  following: {type: Array, default: []},
   hash: String,
   salt: String
 });
+
+UserSchema.methods.follow = function(name, cb){
+  if(!this.following.includes(name)){
+    this.following.push(name);
+  } else {
+    this.following.remove(name);
+  }
+  this.save(cb);
+};
+
+UserSchema.methods.isFollowing = function(name){
+  return this.following.some(function(followId){
+    return followId.toString() === name.toString();
+  });
+};
 
 UserSchema.methods.setPassword = function(password){
   this.salt = crypto.randomBytes(16).toString('hex');
@@ -32,7 +49,19 @@ UserSchema.methods.generateJWT = function(){
     _id: this._id,
     username: this.username,
     exp: parseInt(exp.getTime() / 1000),
-  }, process.env.KEY);
+  }, secret);
+};
+
+UserSchema.methods.toAuthJSON = function(){
+  return {
+    username: this.username,
+    image: this.image,
+    bio: this.bio,
+    favSong: this.favSong,
+    favArtist: this.favArtist,
+    following: this.following,
+    token: this.generateJWT(),
+  };
 };
 
 mongoose.model('User', UserSchema);

@@ -11,7 +11,7 @@ CommentSchema.methods.upvote = function(name, cb){
   if (!this.upvotes.includes(name)){
     this.upvotes.push(name);
   } else {
-    this.upvotes.pop(name);
+    this.upvotes.remove(name);
   }
   this.save(cb);
 };

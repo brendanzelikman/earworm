@@ -51,8 +51,8 @@ router.param('comment', function(req, res, next, id){
 });
 
 // Preload comment objects on routes with ':comment'
-router.param('user', function(req, res, next, id){
-  var query = User.findById(id);
+router.param('user', function(req, res, next, username){
+  var query = User.find({'username': username});
 
   query.exec(function(err, user){
     if (err) { return next(err); }
@@ -121,6 +121,30 @@ router.get('/posts/:post', function(req, res){
   });
 });
 
+router.get('/users/:user', function(req, res){
+  req.user.populate('posts', function(err, user){
+    if (err) {return next(err);}
+    res.json(post);
+  });
+  req.user.populate('comments', function(err, user){
+    if (err) {return next(err);}
+    res.json(post);
+  });
+  req.user.populate('following', function(err, user){
+    if (err) {return next(err);}
+    res.json(post);
+  });
+});
+
+router.get('/users/:user/follow', function(req, res, next){
+  var reqUser = req.body[0];
+  var reqFollow = req.body[1];
+  User.findOne({'username': reqUser.username}).then(function(user){
+    if (!user) { return res.sendStatus(401); }
+    return user.isFollowing(reqFollow.username);
+  }).catch(next);
+});
+
 router.put('/posts/:post', function(req, res, next){
     var post = req.body[0];
     var newPost = req.body[1];
@@ -133,10 +157,21 @@ router.put('/posts/:post', function(req, res, next){
   });
 });
 
+router.put('/users/:user/follow', auth, function(req, res, next){
+  User.findOne({'username': req.payload.username}).then(function(user){
+    if (!user) { return res.sendStatus(401); }
+    console.log(user);
+    user.follow(req.user[0].username, function(err, user){
+      if (err) return next(err);
+      res.json(user);
+    });
+  });
+});
+
 // Upvote a post
 router.put('/posts/:post/upvote', auth, function(req, res, next){
     req.post.upvote(req.payload.username, function(err, post){
-    if (err) { return next(err); }
+    if (err) return next(err);
     res.json(post);
   });
 });
@@ -204,7 +239,8 @@ router.post('/register', function(req, res, next){
       if (err.code === 11000) next(new Error(11000));
       return next(err);
     }
-    return res.json({token: user.generateJWT()});
+    user.token = user.generateJWT();
+    return res.json({user: user.toAuthJSON()});
   });
 });
 
@@ -217,7 +253,8 @@ router.post('/login', function(req, res, next){
     if (err) { return next(err); }
 
     if (user){
-      return res.json({token: user.generateJWT()});
+      user.token = user.generateJWT();
+      return res.json({user: user.toAuthJSON()});
     } else {
       return res.status(401).json(info);
     }
