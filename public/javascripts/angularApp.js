@@ -478,12 +478,32 @@ var app = angular.module('EarWorm', ['ui.router'])
           return $scope.profile.username === user.username;
         };
 
-        $scope.followUser = function(){
-          users.follow(user, $scope.profile);
-        };
-
         $scope.followingProfile = function(){
           return user ? user.following.includes($scope.profile.username) : false;
+        };
+
+        $scope.followUser = function(){
+          if (!$scope.followingProfile()) { users.follow(user, $scope.profile); }
+          else {
+            bootbox.confirm({
+              title: "<h2 style='text-align: center'><b>Are you sure?</b></h2>",
+              message: "<h4 style='text-align: center'>Do you want to unfollow this user?</h4>",
+              buttons: {
+                cancel: {
+                  label: 'Cancel'
+                },
+                confirm: {
+                  label: 'Unfollow'
+                }
+              },
+              centerVertical: true,
+              onEscape: true,
+              backdrop: true,
+              callback: function(result) {
+                if (result) users.follow(user, $scope.profile);
+              }
+            });
+          }
         };
 
         $scope.startEditing = function(user){
