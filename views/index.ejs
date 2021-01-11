@@ -76,15 +76,22 @@ style="min-width: 100%; min-height: 100%;">
 
     <!-- Sort Posts -->
     <div ng-show="posts.length > 0">
-      <span>Sort by: </span>
-      <select id="sortPost" style="margin-left: 5px;">
-        <option value="new" selected="selected">New</option>
-        <option value="upvotes">Upvotes</option>
-        <option value="comments">Comments</option>
-      </select>
+      <div style="float: left;">
+        <span>Sort by: </span>
+        <select id="sortPost" style="margin-left: 5px;">
+          <option value="new" selected="selected">New</option>
+          <option value="upvotes">Upvotes</option>
+          <option value="comments">Comments</option>
+        </select>
+      </div>
+      <div style="float: right;">
+        <span>Search: </span>
+        <input id="postSearch"></input>
+      </div>
     </div>
+    <br>
     <!-- Posts -->
-    <div ng-repeat="post in posts | orderBy: sortedBy"
+    <div ng-repeat="post in posts | filter: postSearch | orderBy: sortedBy"
     style="background-color: #e4ede6; border: 1px solid black; padding: 20px; margin-top: 20px; border-radius: 5px">
       <!-- Post Control -->
       <div style="float: right; margin: -10px -10px 0 0;">
@@ -279,7 +286,7 @@ style="min-width: 100%; min-height: 100%;">
             </span>
           </span>
         </p>
-        <br>
+        <br><br>
         <!-- Bio -->
         <h3 class="italic">"{{profile.bio}}"</h3>
         <br>

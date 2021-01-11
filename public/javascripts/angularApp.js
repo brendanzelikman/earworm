@@ -318,6 +318,7 @@ var app = angular.module('EarWorm', ['ui.router'])
     $scope.users = users.users;
 
     $scope.sortedBy = localStorage.getItem('postSortedBy') || "-createdAt";
+    $scope.postSearch = function(post){ return true; };
 
     $(function() {
       if (localStorage.getItem('postSelectedSort')) {
@@ -332,6 +333,16 @@ var app = angular.module('EarWorm', ['ui.router'])
         }
         localStorage.setItem('postSelectedSort', $('option:selected', this).index());
         localStorage.setItem('postSortedBy', $scope.sortedBy);
+        $scope.$apply();
+      });
+
+      $("#postSearch").on('keyup', function() {
+        var val = $(this).val().toLowerCase();
+        $scope.postSearch = function(post){
+          var titleInc = post.song.title.toLowerCase().includes(val);
+          var artistInc = post.song.artist.toLowerCase().includes(val);
+          return titleInc || artistInc;
+        };
         $scope.$apply();
       });
     });
@@ -507,7 +518,7 @@ var app = angular.module('EarWorm', ['ui.router'])
 
     if ($scope.isLoggedIn){
       users.get(auth.currentUser().username).then(function(user){
-        
+
           $scope.isUser = function(){
             return $scope.profile.username === user.username;
           };
