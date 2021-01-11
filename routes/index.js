@@ -160,8 +160,7 @@ router.put('/posts/:post', function(req, res, next){
 router.put('/users/:user/follow', auth, function(req, res, next){
   User.findOne({'username': req.payload.username}).then(function(user){
     if (!user) { return res.sendStatus(401); }
-    console.log(user);
-    user.follow(req.user[0].username, function(err, user){
+    user.follow(req.user[0], function(err, user){
       if (err) return next(err);
       res.json(user);
     });

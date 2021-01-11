@@ -11,22 +11,32 @@ var UserSchema = new mongoose.Schema({
   favSong: String,
   favArtist: String,
   following: {type: Array, default: []},
+  followers: {type: Array, default: []},
   hash: String,
   salt: String
 });
 
-UserSchema.methods.follow = function(name, cb){
-  if(!this.following.includes(name)){
-    this.following.push(name);
+UserSchema.methods.follow = function(user, cb){
+  if(!this.following.includes(user.username)){
+    this.following.push(user.username);
+    user.followers.push(this.username);
   } else {
-    this.following.remove(name);
+    this.following.remove(user.username);
+    user.followers.remove(this.username);
   }
   this.save(cb);
+  user.save();
+};
+
+UserSchema.methods.isFollowed = function(name){
+  return this.followers.some(function(followName){
+    return followName.toString() === name.toString();
+  });
 };
 
 UserSchema.methods.isFollowing = function(name){
-  return this.following.some(function(followId){
-    return followId.toString() === name.toString();
+  return this.following.some(function(followName){
+    return followName.toString() === name.toString();
   });
 };
 

@@ -154,7 +154,9 @@ style="min-width: 100%; min-height: 100%;">
       </h4>
       <!-- Author + Timestamp -->
       <h4 style="padding-top: 10px; text-align: right;">
-      posted {{timeSince(post.createdAt)}} ago by {{post.author}}</h4>
+      posted {{timeSince(post.createdAt)}} ago by
+      <a style='color: black' href='#/users/{{post.author}}'>{{post.author}}</a>
+      </h4>
     </div>
     <!-- Break -->
     <hr style="border: 1px solid lightgray;">
@@ -212,7 +214,9 @@ style="min-width: 100%; min-height: 100%;">
       <span style="font-size:20px; word-wrap: break-word">{{comment.body}}</span>
       <!-- Comment Timestamp -->
       <span style="position: absolute; bottom: -5px; right: 5px">
-        <h6>posted {{timeSince(comment.createdAt)}} ago by {{comment.author}}</h6>
+        <h6>posted {{timeSince(comment.createdAt)}} ago by
+        <a style='color: black' href='#/users/{{comment.author}}'>{{comment.author}}</a>
+        </h6>
       </span>
 
       </div>
@@ -236,16 +240,17 @@ style="min-width: 100%; min-height: 100%;">
     <!-- User Info -->
     <div style="margin-top: 50px; text-align: center;">
 
-      <div style="border-radius: 5px; background-color: #f0f5f1; border: 1px solid black; cursor: pointer;
-      width: 200px; display: inline-block; padding: 2.5px;" ng-hide="followingProfile()" ng-click="followUser()">
+      <div style="border-radius: 5px; background-color: #f0f5f1; border: 1px solid black;
+      cursor: pointer; width: 200px; display: inline-block; padding: 2.5px;"
+      ng-hide="isUser() || followingProfile()" ng-click="followUser()">
         <h4>Follow<h4>
       </div>
 
-      <div style="border-radius: 5px; background-color: #e8ebe9; border: 1px solid black; cursor: pointer;
-      width: 200px; display: inline-block; padding: 2.5px;" ng-show="followingProfile()" ng-click="followUser()">
+      <div style="border-radius: 5px; background-color: #e8ebe9; border: 1px solid black;
+      cursor: pointer; width: 200px; display: inline-block; padding: 2.5px;"
+      ng-show="followingProfile() && !isUser()" ng-click="followUser()">
         <h4>Following<h4>
       </div>
-
       <br><br>
       <!-- Profile Picture -->
       <img id="profilePicture" style="border-radius: 50%; width: 200px; height: 200px;
@@ -256,19 +261,35 @@ style="min-width: 100%; min-height: 100%;">
       <br>
       <!-- Favorites -->
       <div style="width: 75%; display: inline-block; font-size: 20px;" ng-hide="editing">
+        <!-- Following + Followers -->
+        <p>
+          <span class="italic" style="float: left; display: inline-block;">
+            Following:
+            <span style='cursor:pointer' ng-click="showFollowing()">
+              {{profile.following.length}}
+            </span>
+          </span>
+          <span class="italic" style="float: right; display: inline-block;">
+            Followers:
+            <span style='cursor:pointer' ng-click="showFollowers()">
+              {{profile.followers.length}}
+            </span>
+          </span>
+        </p>
+        <br>
         <!-- Bio -->
-        <h4 class="italic">"{{profile.bio}}"</h4>
+        <h3 class="italic">"{{profile.bio}}"</h3>
         <br>
         <!-- Favorite Song -->
         <p>
-          <span class="bolditalic" style="float: left;">Favorite song:</span>
-          <span class="italic" style="float: right;">{{profile.favSong}}</span>
+          <span class="bolditalic" style="float: left; display: inline-block;">Favorite song:</span>
+          <span class="italic" style="float: right; display: inline-block;">{{profile.favSong}}</span>
         </p>
         <br>
         <!-- Favorite Artist -->
         <p>
-          <span class="bolditalic" style="float: left;">Favorite artist:</span>
-          <span class="italic" style="float: right;">{{profile.favArtist}}</span>
+          <span class="bolditalic" style="float: left; display: inline-block;">Favorite artist:</span>
+          <span class="italic" style="float: right; display: inline-block;">{{profile.favArtist}}</span>
         </p>
         <br><br>
         <button style="display: inline-block;" ng-click="startEditing(profile)"

@@ -128,9 +128,12 @@ var app = angular.module('EarWorm', ['ui.router'])
     }).success(function(data){
       if (!user.following.includes(follow.username)){
         user.following.push(follow.username);
+        follow.followers.push(user.username);
       } else {
         var index = user.following.indexOf(follow.username);
         user.following.splice(index, 1);
+        index = follow.followers.indexOf(user.username);
+        follow.followers.splice(index, 1);
       }
     });
   };
@@ -471,65 +474,97 @@ var app = angular.module('EarWorm', ['ui.router'])
 
     $scope.profile = user;
     $scope.editing = false;
+    $scope.isUser = function(){return true;};
+    $scope.isLoggedIn = auth.isLoggedIn;
 
-    users.get(auth.currentUser().username).then(function(user){
-
-        $scope.isUser = function(){
-          return $scope.profile.username === user.username;
-        };
-
-        $scope.followingProfile = function(){
-          return user ? user.following.includes($scope.profile.username) : false;
-        };
-
-        $scope.followUser = function(){
-          if (!$scope.followingProfile()) { users.follow(user, $scope.profile); }
-          else {
-            bootbox.confirm({
-              title: "<h2 style='text-align: center'><b>Are you sure?</b></h2>",
-              message: "<h4 style='text-align: center'>Do you want to unfollow this user?</h4>",
-              buttons: {
-                cancel: {
-                  label: 'Cancel'
-                },
-                confirm: {
-                  label: 'Unfollow'
-                }
-              },
-              centerVertical: true,
-              onEscape: true,
-              backdrop: true,
-              callback: function(result) {
-                if (result) users.follow(user, $scope.profile);
-              }
-            });
-          }
-        };
-
-        $scope.startEditing = function(user){
-          $scope.editing = true;
-          document.getElementById('editImage').value =
-            (user.image === "images/defaultuser.png") ? "" : user.image;
-          document.getElementById('editBio').value =
-            (user.bio === "I love EarWorm!") ? "" : user.bio;
-        };
-
-        $scope.cancelEdit = function(){
-          $scope.editing = false;
-        };
-
-        $scope.saveEdit = function(user){
-          var newUser = user;
-          var imageURL = document.getElementById('editImage').value;
-          newUser.image = imageURL ? imageURL : "images/defaultuser.png";
-          var bio = document.getElementById('editBio').value;
-          newUser.bio = bio ? bio : "I love EarWorm!";
-          newUser.favSong = document.getElementById('editSong').value;
-          newUser.favArtist = document.getElementById('editArtist').value;
-          users.editUser(user, newUser);
-          $scope.editing = false;
-        };
+    $scope.showFollowing = function(){
+      var following = $scope.profile.following;
+      var msg = "<h2></h2>";
+      for (var i = 0; i < following.length; i++){
+        var user = following[i];
+        var follow = "<script>function chase(){ bootbox.hideAll(); window.location.href = '#/users/"+user+"'}</script>";
+        msg += (follow + "<h3 style='text-align: center'><a style='cursor:pointer' onclick='chase()'>"+user+"</a></h3>");
+      }
+      bootbox.alert({
+        title: "<h2 style='text-align: center'>"+$scope.profile.username+" is following...</h2>",
+        message: msg
       });
+    };
+
+    $scope.showFollowers = function(){
+      var followers = $scope.profile.followers;
+      var msg = "<h2></h2>";
+      for (var i = 0; i < followers.length; i++){
+        var user = followers[i];
+        var follow = "<script>function chase(){ bootbox.hideAll(); window.location.href = '#/users/"+user+"'}</script>";
+        msg += (follow + "<h3 style='text-align: center'><a style='cursor:pointer' onclick='chase()'>"+user+"</a></h3>");
+      }
+      bootbox.alert({
+        title: "<h2 style='text-align: center'>"+$scope.profile.username+" is followed by...</h2>",
+        message: msg
+      });
+    };
+
+    if ($scope.isLoggedIn){
+      users.get(auth.currentUser().username).then(function(user){
+        
+          $scope.isUser = function(){
+            return $scope.profile.username === user.username;
+          };
+
+          $scope.followingProfile = function(){
+            return user ? user.following.includes($scope.profile.username) : false;
+          };
+
+          $scope.followUser = function(){
+            if (!$scope.followingProfile()) { users.follow(user, $scope.profile); }
+            else {
+              bootbox.confirm({
+                title: "<h2 style='text-align: center'><b>Are you sure?</b></h2>",
+                message: "<h4 style='text-align: center'>Do you want to unfollow this user?</h4>",
+                buttons: {
+                  cancel: {
+                    label: 'Cancel'
+                  },
+                  confirm: {
+                    label: 'Unfollow'
+                  }
+                },
+                centerVertical: true,
+                onEscape: true,
+                backdrop: true,
+                callback: function(result) {
+                  if (result) users.follow(user, $scope.profile);
+                }
+              });
+            }
+          };
+
+          $scope.startEditing = function(user){
+            $scope.editing = true;
+            document.getElementById('editImage').value =
+              (user.image === "images/defaultuser.png") ? "" : user.image;
+            document.getElementById('editBio').value =
+              (user.bio === "I love EarWorm!") ? "" : user.bio;
+          };
+
+          $scope.cancelEdit = function(){
+            $scope.editing = false;
+          };
+
+          $scope.saveEdit = function(user){
+            var newUser = user;
+            var imageURL = document.getElementById('editImage').value;
+            newUser.image = imageURL ? imageURL : "images/defaultuser.png";
+            var bio = document.getElementById('editBio').value;
+            newUser.bio = bio ? bio : "I love EarWorm!";
+            newUser.favSong = document.getElementById('editSong').value;
+            newUser.favArtist = document.getElementById('editArtist').value;
+            users.editUser(user, newUser);
+            $scope.editing = false;
+          };
+        });
+      }
   }
 ])
 
