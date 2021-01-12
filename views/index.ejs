@@ -4,35 +4,45 @@ style="min-width: 100%; min-height: 100%;">
   <head>
     <meta charset="utf-8">
     <title>EarWorm</title>
-    <link rel="stylesheet" href="/stylesheets/style.css">
-    <link rel="stylesheet" href="/stylesheets/modal.css">
-    <link rel="stylesheet" href="/stylesheets/fontstyle.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.2/angular-ui-router.js"></script>
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.js"></script>
-
-    <script src="/javascripts/angularApp.js"></script>
+    <!-- STYLESHEETS -->
+    <span>
+      <link rel="stylesheet" href="/stylesheets/style.css">
+      <link rel="stylesheet" href="/stylesheets/bootstrap.css">
+      <link rel="stylesheet" href="/stylesheets/modal.css">
+      <link rel="stylesheet" href="/stylesheets/fonts.css">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+      <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    </span>
+    <!-- SCRIPTS -->
+    <span>
+      <!-- #include Angular -->
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+      <!-- #include Angular ui.router -->
+      <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.2/angular-ui-router.js"></script>
+      <!-- #include jQuery -->
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"></script>
+      <!-- #include Bootstrap -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      <!-- #include BootBox -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.js"></script>
+      <!-- #include user_code -->
+      <script src="/javascripts/app.js"></script>
+      <script src="/javascripts/controllers/mainController.js"></script>
+      <script src="/javascripts/controllers/postController.js"></script>
+      <script src="/javascripts/controllers/userController.js"></script>
+      <script src="/javascripts/controllers/authController.js"></script>
+      <script src="/javascripts/controllers/navController.js"></script>
+      <script src="/javascripts/services/postService.js"></script>
+      <script src="/javascripts/services/userService.js"></script>
+      <script src="/javascripts/services/authService.js"></script>
+    </span>
   <!--  <script src="/javascripts/angularStyle.js"></script> -->
-    <style>.glyphicon-thumbs-up, .glyphicon-edit, .glyphicon-remove {cursor: pointer}
-           .glyphicon-remove, .glyphicon-edit {opacity: 0.2}
-           .glyphicon-remove:hover, .glyphicon-edit:hover {opacity: 0.5}
-           .postbtn {opacity: 0.75}
-           .postbtn:hover {opacity: 1}
-           .userform {width: 50%; display: block; margin: 0 auto;}
-           .bold {font-family: SourceSansPro-Bold}
-           .italic {font-family: SourceSansPro-Italic}
-           .bolditalic {font-family: SourceSansPro-BoldItalic}</style>
   </head>
 
   <body ng-app="EarWorm" style="background: linear-gradient(180deg, white, lightgray); font-family: SourceSansPro" class="image">
-
+    <!-- Navigation bar with user profile + auth controls -- >
     <nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
       <ul class="nav navbar-nav">
         <li ng-show="isLoggedIn()"><a href="/#/users/{{currentUser().username}}">{{currentUser().username}}</a></li>
@@ -41,16 +51,15 @@ style="min-width: 100%; min-height: 100%;">
         <li ng-hide="isLoggedIn()"><a href="/#/register">Register</a></li>
       </ul>
     </nav>
-
+    <!-- Main view -->
     <div class="row" style="overflow: auto">
       <div class="col-md-6 col-md-offset-3">
         <ui-view></ui-view>
       </div>
     </div>
-
   <!-- TEMPLATES -->
 
-  <!-- Template - Home -->
+  <!-- Home -->
   <script type="text/ng-template" id="/home.html">
     <!-- Logo -->
     <div class="page-header">
@@ -131,7 +140,7 @@ style="min-width: 100%; min-height: 100%;">
     <div style="height: 5%; padding: 5%"></div>
   </script>
 
-  <!-- Template - Post -->
+  <!-- Post -->
   <script type="text/ng-template" id="/posts.html">
     <!-- Logo -->
     <div class="page-header">
@@ -238,7 +247,7 @@ style="min-width: 100%; min-height: 100%;">
     <div style="height: 5%; padding: 5%"></div>
   </script>
 
-  <!-- Template - User -->
+  <!-- User -->
   <script type="text/ng-template" id="/users.html">
     <!-- Logo -->
     <div class="page-header">
@@ -342,7 +351,7 @@ style="min-width: 100%; min-height: 100%;">
     <div style="height: 5%; padding: 5%"></div>
   </script>
 
-  <!-- Template - Register -->
+  <!-- Register -->
   <script type="text/ng-template" id="/register.html">
     <!-- Logo -->
     <div class="page-header" style="text-align: center;">
@@ -374,7 +383,7 @@ style="min-width: 100%; min-height: 100%;">
     </form>
   </script>
 
-  <!-- Template - Log In -->
+  <!-- Log In -->
   <script type="text/ng-template" id="/login.html">
     <!-- Logo -->
     <div class="page-header" style="text-align: center;">
