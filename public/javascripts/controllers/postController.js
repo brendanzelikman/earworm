@@ -61,7 +61,6 @@ app.controller('PostsCtrl', [
             label: 'Delete'
           }
         },
-        centerVertical: true,
         onEscape: true,
         backdrop: true,
         callback: function(result){
@@ -92,7 +91,8 @@ app.controller('PostsCtrl', [
         },
         callback: function(result) {
           if (result){
-            posts.editComment(post, comment, document.getElementById('body').value);
+            comment.body = document.getElementById('body').value;
+            posts.editComment(post, comment, comment.body);
           }
         }
       });
@@ -132,4 +132,4 @@ app.controller('PostsCtrl', [
       if (interval > 1) return Math.floor(interval) + "m";
       return Math.floor(seconds) + "s";
     };
-}])
+}]);

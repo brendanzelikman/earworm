@@ -57,7 +57,7 @@ app.controller('MainCtrl', [
       bootbox.confirm({
         message:
           `<span style='margin-top: 10px; text-align: center;'>
-            <h2><b>` + $scope.user.username + `/b> is listening to...</h2>
+            <h2><b>` + $scope.user.username + `</b> is listening to...</h2>
           </span>
           <form style="margin-top: 30px;">
             <div class="form-group" style="float: left; width: 49%">
@@ -131,6 +131,8 @@ app.controller('MainCtrl', [
               },
               caption: document.getElementById('caption').value
             };
+            post.song = newPost.song;
+            post.caption = newPost.caption;
             posts.editPost(post, newPost);
           }
         }
@@ -158,7 +160,6 @@ app.controller('MainCtrl', [
             label: 'Delete'
           }
         },
-        centerVertical: true,
         onEscape: true,
         backdrop: true,
         callback: function(result){

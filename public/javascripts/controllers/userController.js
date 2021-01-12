@@ -22,7 +22,7 @@ app.controller('UserCtrl', [
             window.location.href = '#/users/"+user+"'
           }
         </script>`;
-      var followingList;
+      var followingList = "";
       // For each following, add a clickable link to their profile page
       for (var i = 0; i < following.length; i++){
         var user = following[i];
@@ -49,7 +49,7 @@ app.controller('UserCtrl', [
             window.location.href = '#/users/"+user+"'
           }
         </script>`;
-      var followersList;
+      var followersList = "";
       // For each follower, add a clickable link to their profile page
       for (var i = 0; i < followers.length; i++){
         var user = followers[i];
@@ -94,7 +94,6 @@ app.controller('UserCtrl', [
                     label: 'Unfollow'
                   }
                 },
-                centerVertical: true,
                 onEscape: true,
                 backdrop: true,
                 callback: function(result) {

@@ -12,10 +12,13 @@ require('./models/Comments');
 require('./models/Users');
 require('./config/passport');
 
-mongoose.connect('mongodb://localhost/posts');
+mongoose.connect('mongodb://localhost/earworm');
 
 var indexRouter = require('./routes/index');
 var userRouter = require('./routes/users');
+var postRouter = require('./routes/posts');
+var commentRouter = require('./routes/comments');
+var authRouter = require('./routes/auth');
 
 var app = express();
 
@@ -33,7 +36,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', indexRouter);
-app.use('/users', userRouter);
+app.use('/', userRouter);
+app.use('/', postRouter);
+app.use('/', commentRouter);
+app.use('/', authRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
