@@ -5,8 +5,6 @@ var jwt = require('express-jwt');
 var env = require('dotenv').config();
 
 var mongoose = require('mongoose');
-var Post = mongoose.model('Post');
-var Comment = mongoose.model('Comment');
 var User = mongoose.model('User');
 
 var auth = jwt({secret: process.env.KEY, algorithms: ['HS256'], userProperty: 'payload'});

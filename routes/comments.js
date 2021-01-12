@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var passport = require('passport');
 var jwt = require('express-jwt');
 var env = require('dotenv').config();
 
