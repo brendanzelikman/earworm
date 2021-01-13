@@ -32,17 +32,23 @@ app.factory('auth', ['$http', '$window', '$rootScope', function($http, $window, 
     // Register a user
     auth.register = function(user){
       return $http.post('/register', user).success(function(data){
-        auth.saveToken(data.user.token);
+        auth.saveToken(data.token);
         $window.location.reload();
       }).catch((err) => {
-        if (err.data.contains("E11000")){
+        if (err.data.code === 11000){
+            bootbox.alert({
+              message: '<h2 style="text-align: center"><b>Username already taken!</b></h2>',
+              backdrop: true
+          });
+        }
+        else if (err.data.message){
           bootbox.alert({
-            message: '<h2 style="text-align: center"><b>Username already taken!</b></h2>',
+            message: '<h2 style="text-align: center"><b>'+err.data.message+'!</b></h2>',
             backdrop: true
         });
-        }
-      });
-    };
+      }
+    });
+  };
     // Log in a user
     auth.logIn = function(user){
       return $http.post('/login', user).success(function(data){

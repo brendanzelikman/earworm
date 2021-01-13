@@ -26,7 +26,7 @@ router.post('/users', auth, function(req, res, next){
   var user = new User(req.body);
 
   return user.save(function(err, user){
-    if (err) { return next(err); }
+    if (err) return next(err);
     res.json(user);
   });
 });

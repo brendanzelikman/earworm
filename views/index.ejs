@@ -104,7 +104,7 @@ style="min-width: 100%; min-height: 100%;">
     style="position: relative; background-color: #e4ede6; border: 1px solid black;
     padding: 20px; margin-top: 20px; border-radius: 5px">
       <!-- Post Control -->
-      <div style="position: absolute; top: 5px; right: 5px;">
+      <div style="position: absolute; top: 5px; right: 5px; display: inline-block;">
         <!-- Edit Comment -->
         <span class="glyphicon glyphicon-edit"
         ng-show="authoredPost(post)" ng-click="editPost(post)"></span>
@@ -113,7 +113,7 @@ style="min-width: 100%; min-height: 100%;">
         ng-show="authoredPost(post)" ng-click="deletePost(post)"></span>
       </div>
       <span class="glyphicon glyphicon-volume-up"
-      style="position: absolute; top: 20px; left: 20px; font-size: 20px;"></span>
+      style="position: absolute; top: 22.5px; left: 20px; font-size: 20px;"></span>
       <!-- Author + Title + Artist -->
       <div style="float: left; margin-left: 30px; font-size: 20px; position: relative">
         <a href="#/users/{{post.author}}" style="color:black">{{post.author}}</a>
@@ -121,10 +121,11 @@ style="min-width: 100%; min-height: 100%;">
       </div>
       <br><br>
       <!-- Caption -->
-      <span style="font-size: 15px; position: relative; margin-left: 45px">{{post.caption}}</span>
-      <br>
+      <span style="font-size: 15px; position: relative; margin-left: 30px;
+      display: inline-block; margin-top: 5px">{{post.caption}}</span>
+      <br><br>
       <!-- Media -->
-      <span style="float: right">
+      <span style="position: absolute; bottom: 5px; right: 5px;">
         <!-- Upvote Button -->
         <span ng-show="isLoggedIn()" class="glyphicon glyphicon-thumbs-up" ng-click="upvotePost(post)"></span>
         <span style="cursor: not-allowed" ng-hide="isLoggedIn()"

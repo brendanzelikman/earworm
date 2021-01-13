@@ -10,12 +10,13 @@ app.controller('AuthCtrl', [
     $scope.user = {};
     // Register a user
     $scope.register = function(){
-      auth.register($scope.user).error(function(error){
-        $scope.error = error;
-      }).then(function(){
-        users.create($scope.user);
-        $state.go('home');
+      auth.register($scope.user).catch(function(err){
+        $scope.error = err;
       });
+      if (!jQuery.isEmptyObject($scope.user)){
+        users.create($scope.user);
+        $state.go('register');
+      }
     };
     // Log in a user
     $scope.logIn = function(){
