@@ -12,6 +12,9 @@ require('./models/Comments');
 require('./models/Users');
 require('./config/passport');
 
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useUnifiedTopology', true);
+mongoose.set('useCreateIndex', true);
 mongoose.connect('mongodb://localhost/earworm');
 
 var indexRouter = require('./routes/index');
