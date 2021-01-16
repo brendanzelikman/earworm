@@ -30,6 +30,15 @@ app.factory('users', ['$http', 'auth', function($http, auth){
   o.editUser = function(user, newUser){
     $http.put('/users/'+user._id, [user, newUser]);
   };
+  // HTTP delete a user
+  o.deleteUser = function(user){
+    return $http.delete('/users/'+user.username, {
+      headers: {Authorization: 'Bearer '+auth.getToken()},
+    }).success(function(){
+      var index = o.users.indexOf(user);
+      o.users.splice(index, 1);
+    });
+  };
   // HTTP put/remove a follow
   o.follow = function(user, follow){
     return $http.put('/users/'+follow.username+"/follow", null, {

@@ -57,7 +57,7 @@ app.controller('MainCtrl', [
       bootbox.confirm({
         message:
           `<span style='margin-top: 10px; text-align: center;'>
-            <h2><b>` + $scope.user.username + `</b> is listening to...</h2>
+            <h2><b class='bold'>` + $scope.user.username + `</b> is listening to...</h2>
           </span>
           <form style="margin-top: 30px;">
             <div class="form-group" style="float: left; width: 49%">
@@ -99,7 +99,7 @@ app.controller('MainCtrl', [
       bootbox.confirm({
         message:
           `<span style='margin-top: 10px; text-align: center;'>
-            <h2><b>` + $scope.user.username + `</b> is listening to...</h2></span>
+            <h2><b class='bold'>` + $scope.user.username + `</b> is listening to...</h2></span>
           <form style="margin-top: 30px;">
             <div class="form-group" style="float: left; width: 49%">
               <input id="title" type="text" value="`+post.song.title+
@@ -145,7 +145,7 @@ app.controller('MainCtrl', [
           `<div style='margin-top: 20px;' class='icon-box'>
              <i class='material-icons'>&#xE5CD;</i>
            </div>
-           <h2 style='text-align: center'><b>Are you sure?</b></h2>`,
+           <h2 style='text-align: center'><b class='bold'>Are you sure?</b></h2>`,
         message:
           `<h4 style='text-align: center'>
              Do you really want to delete this post? This cannot be undone.

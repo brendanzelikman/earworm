@@ -57,28 +57,12 @@ app.factory('auth', ['$http', '$window', '$rootScope', function($http, $window, 
     };
     // Log out a user
     auth.logOut = function(){
-      bootbox.confirm({
-        message: "<h2 style='text-align: center'><b>Are you sure?</b></h2>",
-        buttons: {
-          cancel: {
-            className: 'btn-lg btn-light',
-            label: 'Cancel'
-          },
-          confirm: {
-            className: 'btn-lg btn-success',
-            label: 'Log Out'
-          }
-        },
-        centerVertical: true,
-        onEscape: true,
-        backdrop: true,
-        callback: function(result){
-          if (result) {
-            $window.localStorage.removeItem('earworm-token');
-            $window.location.reload();
-          }
-        }
-      });
+      $window.localStorage.removeItem('earworm-token');
+      $window.location.reload();
+    };
+    // Return to the homepage
+    auth.goHome = function(){
+      $window.location.href = '#/home';
     };
   return auth;
 }]);

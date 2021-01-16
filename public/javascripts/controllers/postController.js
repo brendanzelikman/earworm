@@ -46,7 +46,7 @@ app.controller('PostsCtrl', [
           `<div style='margin-top: 20px;' class='icon-box'>
              <i class='material-icons'>&#xE5CD;</i>
            </div>
-           <h2 style='text-align: center'><b>Are you sure?</b></h2>`,
+           <h2 style='text-align: center'><b class='bold'>Are you sure?</b></h2>`,
         message:
           `<h4 style='text-align: center'>
              Do you really want to delete this comment? This cannot be undone.
@@ -73,7 +73,7 @@ app.controller('PostsCtrl', [
       bootbox.confirm({
         message:
           `<span style='margin-top: 10px; text-align: center;'>
-            <h2><b>` + $scope.user.username + ` wants to say...</h2>
+            <h2><b class='bold'>` + $scope.user.username + ` wants to say...</h2>
           </span>
           <form style="margin-top: 30px;">
             <div class="form-group">

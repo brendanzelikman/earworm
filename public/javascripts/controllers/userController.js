@@ -7,6 +7,7 @@ app.controller('UserCtrl', [
   'user',
   'auth',
   function($scope, users, user, auth){
+    if (user === null) auth.goHome();
     // Initialized scope variables
     $scope.profile = user;
     $scope.editing = false;
@@ -125,6 +126,39 @@ app.controller('UserCtrl', [
             newUser.favArtist = document.getElementById('editArtist').value;
             users.editUser(user, newUser);
             $scope.editing = false;
+          };
+          // Delete user profile
+          $scope.deleteProfile = function(user){
+            bootbox.confirm({
+              title:
+                `<div style='margin-top: 20px;' class='icon-box'>
+                   <i class='material-icons'>&#xE5CD;</i>
+                 </div>
+                 <h2 style='text-align: center'><b class='bold'>Are you sure?</b></h2>`,
+              message:
+                `<h4 style='text-align: center'>
+                   Do you really want to delete your profile?
+                   This <b class='bold'>cannot</b> be undone.
+                 </h4>`,
+              buttons: {
+                cancel: {
+                  className: 'btn-lg btn-light',
+                  label: 'Cancel'
+                },
+                confirm: {
+                  className: 'btn-lg btn-danger',
+                  label: 'Delete'
+                }
+              },
+              onEscape: true,
+              backdrop: true,
+              callback: function(result){
+                if (result){
+                  users.deleteUser(user);
+                  auth.logOut();
+                }
+              }
+            });
           };
         });
       }

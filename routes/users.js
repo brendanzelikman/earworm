@@ -52,6 +52,18 @@ router.get('/users/:username', function(req, res, next){
   });
 });
 
+router.delete('/users/:username', auth, function(req, res, next){
+  var username = req.payload.username;
+  Comment.remove({author: username}, function(err){
+    Post.remove({author: username}, function(err){
+      User.remove({username: username}, function(err){
+        if (err) return next(err);
+        res.send("success");
+      });
+    });
+  });
+});
+
 router.get('/users/:user/follow', function(req, res, next){
   var reqUser = req.body[0];
   var reqFollow = req.body[1];
