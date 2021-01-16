@@ -66,7 +66,7 @@ style="min-width: 100%; min-height: 100%;">
     <!-- Logo -->
     <div class="page-header">
       <a href="#/home.html"><img src="/images/logo.png" style = "width: 50%;"></a>
-    </div>
+    </div><br ng-hide="isLoggedIn()">
     <!-- Log In / Register -->
     <div ng-hide="isLoggedIn()" style="text-align: center">
       <h3>We'd love to hear what you're listening to.</br>
@@ -115,16 +115,16 @@ style="min-width: 100%; min-height: 100%;">
         ng-show="authoredPost(post)" ng-click="deletePost(post)"></span>
       </div>
       <span class="glyphicon glyphicon-volume-up"
-      style="position: absolute; top: 22.5px; left: 20px; font-size: 20px;"></span>
+      style="position: absolute; top: 22.5px; left: 20px; font-size: 1.5em;"></span>
       <!-- Author + Title + Artist -->
-      <div style="float: left; margin-left: 30px; font-size: 20px; position: relative">
+      <div style="float: left; margin-left: 30px; font-size: 1.5em; position: relative">
         <a href="#/users/{{post.author}}" style="color:black">{{post.author}}</a>
         is listening to <b class="bold">{{post.song.title}}</b> - <i class="italic">{{post.song.artist}}</i>
       </div>
       <br><br>
       <!-- Caption -->
-      <span style="font-size: 15px; position: relative; margin-left: 30px;
-      display: inline-block; margin-top: 5px">{{post.caption}}</span>
+      <span style="font-size: 1.5em; position: relative; margin-left: 40px;
+      display: inline-block" class="italic">"{{post.caption}}"</span>
       <br><br>
       <!-- Media -->
       <span style="position: absolute; bottom: 5px; right: 5px;">
@@ -262,7 +262,7 @@ style="min-width: 100%; min-height: 100%;">
     <!-- User Info -->
     <div style="margin-top: 50px; text-align: center;">
       <!-- Follow/Unfollow -->
-      <div ng-hide="isUser()">
+      <div ng-hide="isUser() || !isLoggedIn()">
         <!-- Follow Button -->
         <div style="border-radius: 5px; background-color: #f0f5f1; border: 1px solid black;
         cursor: pointer; width: 200px; display: inline-block; padding: 2.5px;"
@@ -368,24 +368,30 @@ style="min-width: 100%; min-height: 100%;">
     <!-- Error Message -->
     <div ng-show="error" class="alert-danger row">
       <span>{{error.message}}</span>
-    </div>
+    </div><br>
     <!-- Register Form -->
     <form ng-submit="register()" style="margin-top:30px; text-align: center">
-      <h3 class="bold">Create a New Account</h3></br>
+      <h2 class="bold">Create a New Account</h2><br>
       <!-- Login --->
-      <a href="#/login"><h5 style-"text-align: center;">Already have an account?</h5></a>
+      <a href="#/login"><h4 style-"text-align: center;">Already have an account?</h4></a><br>
       <!-- Username -->
-      <div class="form-group">
-        <input type="text" class="form-control userform"
+      <div class="input-group input-group-lg">
+        <span class="input-group-addon">
+          <span class="glyphicon glyphicon-user"></span>
+        </span>
+        <input type="text" class="form-control"
         placeholder="Username" ng-model="user.username"></input>
-      </div>
+      </div><br>
       <!-- Password -->
-      <div class="form-group">
-        <input type="password" class="form-control userform"
+      <div class="input-group input-group-lg">
+        <span class="input-group-addon">
+          <span class="glyphicon glyphicon-lock"></span>
+        </span>
+        <input type="text" class="form-control"
         placeholder="Password" ng-model="user.password"></input>
-      </div>
+      </div><br>
       <!-- Submit -->
-      <button style="padding-left: 20px; padding-right: 20px;
+      <button style="font-size: 20px; padding-left: 20px; padding-right: 20px;
       border-color: black; background-color: #1DB954"
       type="submit" class="btn btn-primary">Register</button>
     </form>
@@ -400,24 +406,30 @@ style="min-width: 100%; min-height: 100%;">
     <!-- Error Message -->
     <div ng-show="error" class="alert-danger row">
       <span>{{ error.message }}</span>
-    </div>
+    </div><br>
     <!-- Log In Form -->
     <form ng-submit="logIn()" style="margin-top:30px; text-align: center;">
-      <h3 class="bold">Log in to EarWorm</h3><br>
+      <h2 class="bold">Log in to EarWorm</h2><br>
       <!-- Register --->
-      <a href="#/register"><h5 style-"text-align: center;">Don't have an account yet?</h5></a>
+      <a href="#/register"><h4 style-"text-align: center;">Don't have an account yet?</h4></a><br>
       <!-- Username -->
-      <div class="form-group">
-        <input type="text" class="form-control userform"
+      <div class="input-group input-group-lg">
+        <span class="input-group-addon">
+          <span class="glyphicon glyphicon-user"></span>
+        </span>
+        <input type="text" class="form-control"
         placeholder="Username" ng-model="user.username"></input>
-      </div>
+      </div><br>
       <!-- Password -->
-      <div class="form-group">
-        <input type="password" class="form-control userform"
+      <div class="input-group input-group-lg">
+        <span class="input-group-addon">
+          <span class="glyphicon glyphicon-lock"></span>
+        </span>
+        <input type="text" class="form-control"
         placeholder="Password" ng-model="user.password"></input>
-      </div>
+      </div><br>
       <!-- Submit -->
-      <button style="padding-left: 20px; padding-right: 20px;
+      <button style="font-size: 20px; padding-left: 20px; padding-right: 20px;
       border-color: black; background-color: #1DB954"
       type="submit" class="btn btn-primary">Log In</button>
     </form>
