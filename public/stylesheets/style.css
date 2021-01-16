@@ -4,11 +4,13 @@
 .glyphicon-remove, .glyphicon-edit {
   opacity: 0.2
 }
-.glyphicon-remove:hover, .glyphicon-edit:hover {opacity: 0.5}
-.postbtn {
+.glyphicon-remove:hover, .glyphicon-edit:hover {
+  opacity: 0.5
+}
+.postbtn, #deleteProfile {
   opacity: 0.75
 }
-.postbtn:hover {
+.postbtn:hover, #deleteProfile:hover {
   opacity: 1
 }
 .userform {

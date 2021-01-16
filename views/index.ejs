@@ -319,8 +319,6 @@ style="min-width: 100%; min-height: 100%;">
         <br><br>
         <button style="display: inline-block;" ng-click="startEditing(profile)"
         ng-show="isUser()">Edit Profile</button>
-        <button type="submit" style="display: inline-block;" ng-click="deleteProfile(profile)"
-        ng-show="isUser()">Delete Profile</button>
       </div>
 
       <div style="width: 75%; display: inline-block; font-size: 20px;" ng-show="editing">
@@ -356,7 +354,9 @@ style="min-width: 100%; min-height: 100%;">
       </div>
     </div>
     <!-- Footer Padding -->
-    <div style="height: 5%; padding: 5%"></div>
+    <div style="height: 5%; padding: 5%">
+      <button style="position: fixed; bottom: 10px; right: 10px;" id="deleteProfile"
+      ng-click="deleteProfile(profile)" ng-show="isUser()">Delete Profile</button></div>
   </script>
 
   <!-- Register -->
