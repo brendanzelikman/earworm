@@ -16,20 +16,13 @@ app.controller('UserCtrl', [
     // Show following list of profile
     $scope.showFollowing = function(){
       var following = $scope.profile.following;
-      var followScript =
-        `<script>
-          function chase(){
-            bootbox.hideAll();
-            window.location.href = '#/users/"+user+"'
-          }
-        </script>`;
       var followingList = "";
       // For each following, add a clickable link to their profile page
       for (var i = 0; i < following.length; i++){
         var user = following[i];
         followingList +=
           `<h3 style='text-align: center'>
-            <a style='cursor:pointer' onclick='chase()'>"+user+"</a>
+            <a style='cursor:pointer' onclick='bootbox.hideAll();' href='#/users/`+user+`'>`+user+`</a>
           </h3>`;
       }
       // Bootbox modal alert following list
@@ -37,26 +30,19 @@ app.controller('UserCtrl', [
         title:
           "<h2 style='text-align: center'>"+$scope.profile.username+" is following...</h2>",
         message:
-          followScript + followingList
+          '' + followingList
       });
     };
     // Show followers list of profile
     $scope.showFollowers = function(){
       var followers = $scope.profile.followers;
-      var followScript =
-        `<script>
-          function chase(){
-            bootbox.hideAll();
-            window.location.href = '#/users/"+user+"'
-          }
-        </script>`;
       var followersList = "";
       // For each follower, add a clickable link to their profile page
       for (var i = 0; i < followers.length; i++){
         var user = followers[i];
         followersList +=
           `<h3 style='text-align: center'>
-            <a style='cursor:pointer' onclick='chase()'>"+user+"</a>
+            <a style='cursor:pointer' onclick='bootbox.hideAll();' href='#/users/`+user+`'>`+user+`</a>
           </h3>`;
       }
       // Bootbox modal alert follower list
@@ -64,7 +50,7 @@ app.controller('UserCtrl', [
         title:
           "<h2 style='text-align: center'>"+$scope.profile.username+" is followed by...</h2>",
         message:
-          followScript + followersList
+          '' + followersList
       });
     };
     // If user is logged in, define several additional functions
