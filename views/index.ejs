@@ -78,8 +78,8 @@ style="min-width: 100%; min-height: 100%;">
     <!-- Add Post -->
     <form ng-controller="NavCtrl" ng-submit="addPost()" ng-show="isLoggedIn()" style="margin-top: 30px;">
       <h3 style="text-align: center;"></h3><br>
-      <button type="submit" class="btn btn-primary postbtn"
-        style="display: block; margin: 0 auto; width: 50%; padding: 10px; outline-width: 0px;
+      <button type="submit" class="btn btn-primary postbtn italic"
+        style="display: block; margin: 0 auto; padding: 10px 10% 10px 10%; outline-width: 0px; font-size: 17.5px;
         background-color: #f0f5f1; color: black; border-radius: 5px; border: 1px solid black;" >
         What are you listening to, {{currentUser().username}}?
       </button>
@@ -88,7 +88,7 @@ style="min-width: 100%; min-height: 100%;">
     <!-- Sort Posts -->
     <div ng-show="posts.length > 0">
       <div style="float: left;">
-        <span>Sort by: </span>
+        <h4 style="display: inline;">Sort by: </h4>
         <select id="sortPost" style="margin-left: 5px;">
           <option value="new" selected="selected">New</option>
           <option value="upvotes">Upvotes</option>
@@ -96,7 +96,7 @@ style="min-width: 100%; min-height: 100%;">
         </select>
       </div>
       <div style="float: right;">
-        <span>Search: </span>
+        <h4 style="display: inline;">Search:</h4>
         <input id="postSearch"></input>
       </div>
     </div>
@@ -104,7 +104,7 @@ style="min-width: 100%; min-height: 100%;">
     <!-- Posts -->
     <div ng-repeat="post in posts | filter: postSearch | orderBy: sortedBy"
     style="position: relative; background-color: #e4ede6; border: 1px solid black;
-    padding: 20px; margin-top: 20px; border-radius: 5px">
+    padding: 20px; margin-top: 20px; border-radius: 5px;">
       <!-- Post Control -->
       <div style="position: absolute; top: 5px; right: 5px; display: inline-block;">
         <!-- Edit Comment -->
@@ -123,9 +123,9 @@ style="min-width: 100%; min-height: 100%;">
       </div>
       <br><br>
       <!-- Caption -->
-      <span style="font-size: 1.5em; position: relative; margin-left: 40px;
-      display: inline-block" class="italic">"{{post.caption}}"</span>
-      <br><br>
+      <span style="font-size: 1.5em; position: relative; margin-left: 40px; margin-top: 5px;
+      display: inline-block; width: calc(100% - 180px);" class="italic">"{{post.caption}}"</span>
+      <br>
       <!-- Media -->
       <span style="position: absolute; bottom: 5px; right: 5px;">
         <!-- Upvote Button -->
@@ -387,7 +387,7 @@ style="min-width: 100%; min-height: 100%;">
         <span class="input-group-addon">
           <span class="glyphicon glyphicon-lock"></span>
         </span>
-        <input type="text" class="form-control"
+        <input type="password" class="form-control"
         placeholder="Password" ng-model="user.password"></input>
       </div><br>
       <!-- Submit -->
@@ -425,7 +425,7 @@ style="min-width: 100%; min-height: 100%;">
         <span class="input-group-addon">
           <span class="glyphicon glyphicon-lock"></span>
         </span>
-        <input type="text" class="form-control"
+        <input type="password" class="form-control"
         placeholder="Password" ng-model="user.password"></input>
       </div><br>
       <!-- Submit -->

@@ -73,7 +73,7 @@ app.controller('PostsCtrl', [
       bootbox.confirm({
         message:
           `<span style='margin-top: 10px; text-align: center;'>
-            <h2><b class='bold'>` + $scope.user.username + ` wants to say...</h2>
+            <h2><b class='bold'>` + $scope.user.username + `</b> wants to say...</h2>
           </span>
           <form style="margin-top: 30px;">
             <div class="form-group">
