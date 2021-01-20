@@ -1,3 +1,108 @@
+:root {
+  --post-color: #e4ede6;
+  --comment-color: #edf2ef;
+}
+
+.post-body {
+  background-color: var(--post-color);
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 20px;
+  position: relative;
+}
+
+.post-submit, .post-submit:hover,
+.post-submit:focus, .post-submit:active:focus {
+  display: block;
+  margin: 0 auto;
+  padding: 10px 10% 10px 10%;
+  outline-width: 0px;
+  font-size: 17.5px;
+  background-color: #f0f5f1;
+  color: black;
+  border-radius: 5px;
+  border: 1px solid black;
+  opacity: 0.75;
+}
+
+.post-submit:hover {
+  opacity: 1;
+}
+
+.comment-body {
+  background-color: var(--comment-color);
+  border: 1px solid black;
+  width: 50%;
+  padding: 25px;
+  margin-top: 20px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.comment-submit, .comment-submit:hover,
+.comment-submit:focus, .comment-submit:active:focus {
+  outline-width: 0px;
+  position: absolute;
+  height: 33px;
+  background-color: var(--comment-color);
+  color: black;
+  top: 50%;
+  margin-top:-16px;
+  left:-65px;
+  opacity: 0.75;
+  border: 1px solid black;
+}
+
+.comment-submit:hover {
+  opacity: 1;
+}
+
+.bio-float-left {
+  display: inline-block;
+  float: left;
+}
+
+.bio-float-right {
+  display: inline-block;
+  float: right;
+}
+
+.follow {
+  border-radius: 5px;
+  border: 1px solid black;
+  cursor: pointer;
+  width: 200px;
+  display: inline-block;
+  padding: 2.5px;
+}
+
+.follow-button {
+  background-color: #f0f5f1;
+}
+
+.unfollow-button {
+   background-color: #e8ebe9;
+}
+
+.form-submit, .form-submit:hover,
+.form-submit:focus, .form-submit:active:focus {
+  font-size: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-color: black;
+  background-color: #1db954;
+  outline-width: 0px;
+}
+
+.logo {
+  width: 50%;
+}
+
+.footer-padding {
+  height: 5%;
+  padding: 5%;
+}
+
 .glyphicon-thumbs-up, .glyphicon-edit, .glyphicon-remove {
   cursor: pointer
 }
@@ -7,21 +112,12 @@
 .glyphicon-remove:hover, .glyphicon-edit:hover {
   opacity: 0.5
 }
-.postbtn, #deleteProfile {
+#deleteProfile {
   opacity: 0.75
 }
-.postbtn:hover, #deleteProfile:hover {
+#deleteProfile:hover {
   opacity: 1
 }
 .userform {
   width: 50%; display: block; margin: 0 auto;
-}
-.bold {
-  font-family: SourceSansPro-Bold
-}
-.italic {
-  font-family: SourceSansPro-Italic
-}
-.bolditalic {
-  font-family: SourceSansPro-BoldItalic
 }

@@ -8,13 +8,12 @@ style="min-width: 100%; min-height: 100%;">
     <link rel="icon" href="/images/favicon.ico">
     <!-- STYLESHEETS -->
     <span>
-      <link rel="stylesheet" href="/stylesheets/style.css">
-      <link rel="stylesheet" href="/stylesheets/bootstrap.css">
       <link rel="stylesheet" href="/stylesheets/modal.css">
       <link rel="stylesheet" href="/stylesheets/fonts.css">
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <link rel="stylesheet" href="/stylesheets/style.css">
+
     </span>
     <!-- SCRIPTS -->
     <span>
@@ -43,7 +42,7 @@ style="min-width: 100%; min-height: 100%;">
   <!--  <script src="/javascripts/angularStyle.js"></script> -->
   </head>
 
-  <body ng-app="EarWorm" style="background: linear-gradient(180deg, white, lightgray); font-family: SourceSansPro" class="image">
+  <body ng-app="EarWorm" style="background: linear-gradient(180deg, white, lightgray); font-family: SourceSansPro">
     <!-- Navigation bar with user profile + auth controls -->
     <nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
       <ul class="nav navbar-nav">
@@ -65,7 +64,7 @@ style="min-width: 100%; min-height: 100%;">
   <script type="text/ng-template" id="/home.html">
     <!-- Logo -->
     <div class="page-header">
-      <a href="#/home.html"><img src="/images/logo.png" style = "width: 50%;"></a>
+      <a href="#/home.html"><img src="/images/logo.png" class="logo"></a>
     </div><br ng-hide="isLoggedIn()">
     <!-- Log In / Register -->
     <div ng-hide="isLoggedIn()" style="text-align: center">
@@ -74,17 +73,14 @@ style="min-width: 100%; min-height: 100%;">
         to tell the world.
       </h3>
     </div>
-
     <!-- Add Post -->
     <form ng-controller="NavCtrl" ng-submit="addPost()" ng-show="isLoggedIn()" style="margin-top: 30px;">
       <h3 style="text-align: center;"></h3><br>
-      <button type="submit" class="btn btn-primary postbtn italic"
-        style="display: block; margin: 0 auto; padding: 10px 10% 10px 10%; outline-width: 0px; font-size: 17.5px;
-        background-color: #f0f5f1; color: black; border-radius: 5px; border: 1px solid black;" >
+      <button type="submit" class="btn btn-primary postbtn italic post-submit">
         What are you listening to, {{currentUser().username}}?
       </button>
-    </form><br><br><br>
-
+    </form>
+    <br><br><br>
     <!-- Sort Posts -->
     <div ng-show="posts.length > 0">
       <div style="float: left;">
@@ -103,8 +99,7 @@ style="min-width: 100%; min-height: 100%;">
     <br>
     <!-- Posts -->
     <div ng-repeat="post in posts | filter: postSearch | orderBy: sortedBy"
-    style="position: relative; background-color: #e4ede6; border: 1px solid black;
-    padding: 20px; margin-top: 20px; border-radius: 5px;">
+    class="post-body" style="margin-top: 20px;">
       <!-- Post Control -->
       <div style="position: absolute; top: 5px; right: 5px; display: inline-block;">
         <!-- Edit Comment -->
@@ -124,7 +119,10 @@ style="min-width: 100%; min-height: 100%;">
       <br><br>
       <!-- Caption -->
       <span style="font-size: 1.5em; position: relative; margin-left: 40px; margin-top: 5px;
-      display: inline-block; width: calc(100% - 180px);" class="italic">"{{post.caption}}"</span>
+      display: inline-block; width: calc(100% - 180px);" class="italic">
+      <span ng-hide="post.caption">{{post.caption}}</span>
+      <span ng-show="post.caption">"{{post.caption}}"</span>
+      </span>
       <br>
       <!-- Media -->
       <span style="position: absolute; bottom: 5px; right: 5px;">
@@ -143,14 +141,14 @@ style="min-width: 100%; min-height: 100%;">
       </span>
     </div>
     <!-- Footer Padding -->
-    <div style="height: 5%; padding: 5%"></div>
+    <div class="footer-padding"></div>
   </script>
 
   <!-- Post -->
   <script type="text/ng-template" id="/posts.html">
     <!-- Logo -->
     <div class="page-header">
-      <a href="#/home"><img src="/images/logo.png" style = "width: 50%;"></a>
+      <a href="#/home"><img src="/images/logo.png" class="logo"></a>
     </div>
     <!-- Post Info -->
     <div>
@@ -160,8 +158,7 @@ style="min-width: 100%; min-height: 100%;">
         <b class="bold">{{post.song.title}}</b> - <i class="italic">{{post.song.artist}}</i>
       </h2><br>
       <!-- Upvote + Caption -->
-      <h4 style="text-align: center; background-color: #e4ede6; border-radius: 5px;
-      border: 1px solid black; padding: 20px; position: relative;">
+      <h4 class="post-body">
         <div style="position: absolute; left: -45px; top: 50%; margin-top: -10px;">
           <!-- Upvote Button -->
           <span ng-show="isLoggedIn()"
@@ -189,8 +186,7 @@ style="min-width: 100%; min-height: 100%;">
       <div class="form-group" style="position: relative;">
         <textarea type="text" class="form-control" style="width: 50%; resize: none;"
          rows=3 ng-model="body" required></textarea>
-        <button type="submit" style="position: absolute; height: 33px; background-color: #edf2ef; color: black;
-        top: 50%; margin-top:-16px; left:-65px; border: 1px solid black;" class="btn btn-primary">Post</button>
+        <button type="submit" class="btn btn-primary comment-submit">Post</button>
       </div>
       <!-- Submit Comment -->
     </form>
@@ -208,9 +204,7 @@ style="min-width: 100%; min-height: 100%;">
     </div>
     <!-- Comments -->
     <h3 ng-show="post.comments.length !== 0">Comments: {{post.comments.length}}</h3>
-    <div ng-repeat="comment in post.comments | orderBy: sortedBy"
-      style="background-color: #edf2ef; border: 1px solid black; width: 50%;
-      padding: 25px; margin-top: 20px; border-radius: 5px; position: relative;">
+    <div ng-repeat="comment in post.comments | orderBy: sortedBy" class="comment-body">
       <div>
         <!-- Comment Control -->
         <div style="float: right; margin: -15px -15px 0 0;">
@@ -250,37 +244,32 @@ style="min-width: 100%; min-height: 100%;">
         </h3>
     </div>
     <!-- Footer Padding -->
-    <div style="height: 5%; padding: 5%"></div>
+    <div class="footer-padding"></div>
   </script>
 
   <!-- User -->
   <script type="text/ng-template" id="/users.html">
     <!-- Logo -->
     <div class="page-header">
-      <a href="#/home"><img src="/images/logo.png" style = "width: 50%"></a>
+      <a href="#/home"><img src="/images/logo.png" class="logo"></a>
     </div>
     <!-- User Info -->
     <div style="margin-top: 50px; text-align: center;">
       <!-- Follow/Unfollow -->
       <div ng-hide="isUser() || !isLoggedIn()">
         <!-- Follow Button -->
-        <div style="border-radius: 5px; background-color: #f0f5f1; border: 1px solid black;
-        cursor: pointer; width: 200px; display: inline-block; padding: 2.5px;"
-        ng-hide="followingProfile()" ng-click="followUser()">
+        <div class="follow follow-button" ng-hide="followingProfile()" ng-click="followUser()">
           <h4>Follow<h4>
         </div>
         <!-- Unfollow Button -->
-        <div style="border-radius: 5px; background-color: #e8ebe9; border: 1px solid black;
-        cursor: pointer; width: 200px; display: inline-block; padding: 2.5px;"
-        ng-show="followingProfile()" ng-click="followUser()">
+        <div class="follow unfollow-button" ng-show="followingProfile()" ng-click="followUser()">
           <h4>Following<h4>
         </div>
         <br><br>
       </div>
       <!-- Profile Picture -->
-      <img id="profilePicture" style="border-radius: 50%; width: 200px; height: 200px;
-      border: 1px solid black;" ng-src="{{profile.image}}"
-      onerror="document.getElementById('profilePicture').src='images/defaultuser.png'">
+      <img style="border-radius: 50%; width: 200px; height: 200px; border: 1px solid black;"
+      id="profilePicture" ng-src="{{profile.image}}">
       <!-- Username -->
       <span><h2>{{profile.username}} </h2></span>
       <br>
@@ -307,14 +296,14 @@ style="min-width: 100%; min-height: 100%;">
         <br>
         <!-- Favorite Song -->
         <p>
-          <span class="bolditalic" style="float: left; display: inline-block;">Favorite song:</span>
-          <span class="italic" style="float: right; display: inline-block;">{{profile.favSong}}</span>
+          <span class="bolditalic bio-float-left">Favorite song:</span>
+          <span class="italic bio-float-right">{{profile.favSong}}</span>
         </p>
         <br>
         <!-- Favorite Artist -->
         <p>
-          <span class="bolditalic" style="float: left; display: inline-block;">Favorite artist:</span>
-          <span class="italic" style="float: right; display: inline-block;">{{profile.favArtist}}</span>
+          <span class="bolditalic bio-float-left">Favorite artist:</span>
+          <span class="italic bio-float-right">{{profile.favArtist}}</span>
         </p>
         <br><br>
         <button style="display: inline-block;" ng-click="startEditing(profile)"
@@ -324,26 +313,26 @@ style="min-width: 100%; min-height: 100%;">
       <div style="width: 75%; display: inline-block; font-size: 20px;" ng-show="editing">
         <form>
           <p>
-            <span class="bolditalic" style="float: left;">Image URL:</span>
-            <input class="italic" style="float: right;" type="text"
+            <span class="bolditalic bio-float-left">Image URL:</span>
+            <input class="italic bio-float-right" type="text"
             placeholder="Image URL" id="editImage"></input>
           </p>
           <br><br>
           <p>
-            <span class="bolditalic" style="float: left;">Bio:</span>
-            <textarea class="italic" style="float: right; resize: none;" type="text"
+            <span class="bolditalic bio-float-left">Bio:</span>
+            <textarea class="italic bio-float-right" style="resize: none;" type="text"
              value="{{profile.bio}}" placeholder="Bio" id="editBio" rows="2"></textarea>
           </p>
           <br><br><br>
           <p>
-            <span class="bolditalic" style="float: left;">Favorite song:</span>
-            <input class="italic" style="float: right;" type="text" value="{{profile.favSong}}"
+            <span class="bolditalic bio-float-left">Favorite song:</span>
+            <input class="italic bio-float-right" type="text" value="{{profile.favSong}}"
             placeholder="Favorite Song" id="editSong"></input>
           </p>
           <br>
           <p>
-            <span class="bolditalic" style="float: left;">Favorite artist:</span>
-            <input class="italic" style="float: right;" type="text" value="{{profile.favArtist}}"
+            <span class="bolditalic bio-float-left">Favorite artist:</span>
+            <input class="italic bio-float-right" type="text" value="{{profile.favArtist}}"
             placeholder="Favorite Artist" id="editArtist"></input>
           </p>
           <br><br>
@@ -354,7 +343,7 @@ style="min-width: 100%; min-height: 100%;">
       </div>
     </div>
     <!-- Footer Padding -->
-    <div style="height: 5%; padding: 5%">
+    <div class="footer-padding">
       <button style="position: fixed; bottom: 10px; right: 10px;" id="deleteProfile"
       ng-click="deleteProfile(profile)" ng-show="isUser()">Delete Profile</button></div>
   </script>
@@ -363,7 +352,7 @@ style="min-width: 100%; min-height: 100%;">
   <script type="text/ng-template" id="/register.html">
     <!-- Logo -->
     <div class="page-header" style="text-align: center;">
-      <a href="#/home"><img src="/images/logo.png" style = "width: 50%;"></a>
+      <a href="#/home"><img src="/images/logo.png" class="logo"></a>
     </div>
     <!-- Error Message -->
     <div ng-show="error" class="alert-danger row">
@@ -391,9 +380,7 @@ style="min-width: 100%; min-height: 100%;">
         placeholder="Password" ng-model="user.password"></input>
       </div><br>
       <!-- Submit -->
-      <button style="font-size: 20px; padding-left: 20px; padding-right: 20px;
-      border-color: black; background-color: #1DB954"
-      type="submit" class="btn btn-primary">Register</button>
+      <button type="submit" class="btn btn-primary form-submit">Register</button>
     </form>
   </script>
 
@@ -401,7 +388,7 @@ style="min-width: 100%; min-height: 100%;">
   <script type="text/ng-template" id="/login.html">
     <!-- Logo -->
     <div class="page-header" style="text-align: center;">
-      <a href="#/home"><img src="/images/logo.png" style = "width: 50%"></a>
+      <a href="#/home"><img src="/images/logo.png" class="logo"></a>
     </div>
     <!-- Error Message -->
     <div ng-show="error" class="alert-danger row">
@@ -429,9 +416,7 @@ style="min-width: 100%; min-height: 100%;">
         placeholder="Password" ng-model="user.password"></input>
       </div><br>
       <!-- Submit -->
-      <button style="font-size: 20px; padding-left: 20px; padding-right: 20px;
-      border-color: black; background-color: #1DB954"
-      type="submit" class="btn btn-primary">Log In</button>
+      <button type="submit" class="btn btn-primary form-submit">Log In</button>
     </form>
   </script>
 

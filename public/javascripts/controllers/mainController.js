@@ -62,11 +62,11 @@ app.controller('MainCtrl', [
           <form style="margin-top: 30px;">
             <div class="form-group" style="float: left; width: 49%">
               <input id="title" type="text" placeholder="Title"
-              class="form-control" required>
+              class="form-control">
             </div>
             <div class="form-group" style="float: left; margin-left: 2%; width: 49%">
               <input id="artist" type="text" placeholder="Artist"
-              class="form-control" required>
+              class="form-control">
             </div>
             <div class="form-group">
               <input id="caption" style="height: 50px;" type="text"
@@ -83,13 +83,17 @@ app.controller('MainCtrl', [
         },
         callback: function(result) {
           if (result){
-            posts.create({
-              song: {
-                title: document.getElementById('title').value,
-                artist: document.getElementById('artist').value
-              },
-              caption: document.getElementById('caption').value
-            });
+            var title = document.getElementById('title').value;
+            var artist = document.getElementById('artist').value;
+            if (title && artist) {
+              posts.create({
+                song: {
+                  title: title,
+                  artist: artist
+                },
+                caption: document.getElementById('caption').value
+              });
+            }
           }
         }
     });

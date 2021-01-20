@@ -17,3 +17,13 @@ src: url('../fonts/SourceSansPro-Italic.ttf');
 font-family: 'SourceSansPro-BoldItalic';
 src: url('../fonts/SourceSansPro-BoldItalic.ttf');
 }
+
+.bold {
+  font-family: SourceSansPro-Bold
+}
+.italic {
+  font-family: SourceSansPro-Italic
+}
+.bolditalic {
+  font-family: SourceSansPro-BoldItalic
+}
