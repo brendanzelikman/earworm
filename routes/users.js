@@ -10,8 +10,8 @@ var User = mongoose.model('User');
 
 var auth = jwt({secret: process.env.KEY, algorithms: ['HS256'], userProperty: 'payload'});
 
-router.param('user', function(req, res, next, username){
-  var query = User.find({'username': username});
+router.param('user', function(req, res, next, id){
+  var query = User.findById(id);
 
   query.exec(function(err, user){
     if (err) { return next(err); }

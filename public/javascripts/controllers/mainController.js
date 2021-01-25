@@ -11,7 +11,12 @@ app.controller('MainCtrl', [
     $scope.posts = posts.posts;
     $scope.users = users.users;
     $scope.isLoggedIn = auth.isLoggedIn;
-    $scope.user = auth.currentUser();
+    if ($scope.isLoggedIn()){
+      users.get(auth.currentUser().username).then(function(user){
+        $scope.user = user;
+        return;
+      });
+    }
     // Obtain sort from localStorage || "new" and initialize search to empty
     $scope.sortedBy = localStorage.getItem('postSortedBy') || "-createdAt";
     $scope.postSearch = function(post){ return true; };
@@ -46,11 +51,11 @@ app.controller('MainCtrl', [
     };
     // Return if user upvoted post
     $scope.upvotedPost = function(post){
-      if ($scope.isLoggedIn()) return post.upvotes.includes($scope.user.username);
+      if ($scope.isLoggedIn()) return post.upvotes.includes(auth.currentUser()._id);
     };
     // Return if user authored post
     $scope.authoredPost = function(post){
-      if ($scope.isLoggedIn()) return post.author === $scope.user.username;
+      if ($scope.isLoggedIn()) return post.author._id === auth.currentUser()._id;
     };
     // Create a post using a bootbox modal confirm
     $scope.addPost = function(){
@@ -91,7 +96,7 @@ app.controller('MainCtrl', [
                   title: title,
                   artist: artist
                 },
-                caption: document.getElementById('caption').value
+                caption: document.getElementById('caption').value,
               });
             }
           }

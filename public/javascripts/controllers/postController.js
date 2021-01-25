@@ -5,12 +5,18 @@ app.controller('PostsCtrl', [
   '$scope',
   'posts',
   'post',
+  'users',
   'auth',
-  function($scope, posts, post, auth){
+  function($scope, posts, post, users, auth){
     // $scope initialized variables
     $scope.post = post;
     $scope.isLoggedIn = auth.isLoggedIn;
-    $scope.user = auth.currentUser();
+    if ($scope.isLoggedIn()){
+      users.get(auth.currentUser().username).then(function(user){
+        $scope.user = user;
+        return;
+      });
+    }
     // Obtain sort from localStorage || "new"
     $scope.sortedBy = localStorage.getItem('commentSortedBy') || "-createdAt";
     // Set "sort by" to last selected option
@@ -30,10 +36,9 @@ app.controller('PostsCtrl', [
     });
     // Create a comment
     $scope.addComment = function(){
-      if ($scope.body === '') { return; }
+      if ($scope.body === '') return;
       posts.addComment(post._id, {
-        body: $scope.body,
-        author: 'user',
+        body: $scope.body
       }).success(function(comment){
         $scope.post.comments.push(comment);
       });
@@ -107,15 +112,15 @@ app.controller('PostsCtrl', [
     };
     // Return if user upvoted the post
     $scope.upvotedPost = function(post){
-      if ($scope.isLoggedIn()) return post.upvotes.includes($scope.user.username);
+      if ($scope.isLoggedIn()) return post.upvotes.includes(auth.currentUser()._id);
     };
     // Return if user upvoted a comment
     $scope.upvotedComment = function(comment){
-      if ($scope.isLoggedIn()) return comment.upvotes.includes($scope.user.username);
+      if ($scope.isLoggedIn()) return comment.upvotes.includes(auth.currentUser()._id);
     };
     // Return if user authored a comment
     $scope.authoredComment = function(comment){
-      if ($scope.isLoggedIn()) return comment.author === $scope.user.username;
+      if ($scope.isLoggedIn()) return comment.author._id === auth.currentUser()._id;
     };
     // Return time since date for post/comment timestamps
     $scope.timeSince = function(date) {

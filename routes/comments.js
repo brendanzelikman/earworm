@@ -10,9 +10,7 @@ var Comment = mongoose.model('Comment');
 var auth = jwt({secret: process.env.KEY, algorithms: ['HS256'], userProperty: 'payload'});
 
 router.param('post', function(req, res, next, id){
-  var query = Post.findById(id);
-
-  query.exec(function(err, post){
+  Post.findById(id).exec(function(err, post){
     if (err) { return next(err); }
     if (!post) { return next(new Error("Can\'t find post!")); }
 
@@ -36,7 +34,7 @@ router.param('comment', function(req, res, next, id){
 router.post('/posts/:post/comments', auth, function(req, res, next){
   var comment = new Comment(req.body);
   comment.post = req.post._id;
-  comment.author = req.payload.username;
+  comment.author = req.payload._id;
 
   comment.save(function(err, comment){
     if (err) { return next(err); }
@@ -73,7 +71,7 @@ router.delete('/posts/:post/comments/:comment', auth, function(req, res, next){
 });
 
 router.put('/posts/:post/comments/:comment/upvote', auth, function(req, res, next){
-  req.comment.upvote(req.payload.username, function(err, comment){
+  req.comment.upvote(req.payload._id, function(err, comment){
     if (err) { return next(err); }
     res.json(comment);
   });

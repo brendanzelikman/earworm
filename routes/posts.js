@@ -1,3 +1,4 @@
+/* jshint esversion: 6 */
 var express = require('express');
 var router = express.Router();
 var jwt = require('express-jwt');
@@ -11,27 +12,28 @@ var User = mongoose.model('User');
 var auth = jwt({secret: process.env.KEY, algorithms: ['HS256'], userProperty: 'payload'});
 
 router.param('post', function(req, res, next, id){
-  var query = Post.findById(id);
+  Post.findById(id)
+    .exec(function(err, post){
+      if (err) { return next(err); }
+      if (!post) { return next(new Error("Can\'t find post!")); }
 
-  query.exec(function(err, post){
-    if (err) { return next(err); }
-    if (!post) { return next(new Error("Can\'t find post!")); }
-
-    req.post = post;
-    return next();
-  });
+      req.post = post;
+      return next();
+    });
 });
 
 router.get('/posts', function(req, res, next){
-  Post.find(function(err, posts){
-    if (err) { return next(err); }
-    res.json(posts);
-  });
+  Post.find()
+    .populate('author')
+    .exec(function(err, posts){
+      if (err) { return next(err); }
+      res.json(posts);
+    });
 });
 
 router.post('/posts', auth, function(req, res, next){
   var post = new Post(req.body);
-  post.author = req.payload.username;
+  post.author = req.payload._id;
 
   return post.save(function(err, post){
     if (err) { return next(err); }
@@ -40,10 +42,17 @@ router.post('/posts', auth, function(req, res, next){
 });
 
 router.get('/posts/:post', function(req, res){
-  req.post.populate('comments', function(err, post){
-    if (err) {return next(err);}
-    res.json(post);
-  });
+  Post.findById(req.post._id)
+    .populate('author')
+    .populate({
+      path: 'comments',
+      populate: {
+        path: 'author',
+      }})
+    .exec(function(err, post){
+      if (err) {return next(err);}
+      res.json(post);
+    });
 });
 
 router.put('/posts/:post', function(req, res, next){
@@ -60,15 +69,15 @@ router.put('/posts/:post', function(req, res, next){
 
 router.delete('/posts/:post', auth, function(req, res, next){
   Comment.remove({post: req.post}, function(err){
-      req.post.remove(function(err) {
-          if (err) { return next(err); }
-          res.send("success");
-        });
+    req.post.remove(function(err) {
+        if (err) { return next(err); }
+        res.send("success");
+      });
   });
 });
 
 router.put('/posts/:post/upvote', auth, function(req, res, next){
-    req.post.upvote(req.payload.username, function(err, post){
+    req.post.upvote(req.payload._id, function(err, post){
     if (err) return next(err);
     res.json(post);
   });

@@ -3,16 +3,16 @@ var mongoose = require('mongoose');
 var PostSchema = new mongoose.Schema({
   song: {title: String, artist: String},
   caption: String,
-  author: String,
-  upvotes: {type: Array, default: []},
+  author: {type: mongoose.Schema.Types.ObjectID, ref: 'User'},
+  upvotes: [{type: mongoose.Schema.Types.ObjectID, ref: 'User'}],
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment'}]
 }, {timestamps: true});
 
-PostSchema.methods.upvote = function(name, cb){
-  if (!this.upvotes.includes(name)){
-    this.upvotes.push(name);
+PostSchema.methods.upvote = function(id, cb){
+  if (!this.upvotes.includes(id)){
+    this.upvotes.push(id);
   } else {
-    this.upvotes.remove(name);
+    this.upvotes.remove(id);
   }
   this.save(cb);
 };

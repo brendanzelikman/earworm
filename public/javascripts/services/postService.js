@@ -18,12 +18,12 @@ app.factory('posts', ['$http', 'auth', function($http, auth){
       angular.copy(data, o.posts);
     });
   };
-  // HTTP put/remove a follow
+  // HTTP put/remove a post
   o.create = function(post){
     return $http.post('/posts', post, {
       headers: {Authorization: 'Bearer '+auth.getToken()}
     }).success(function(data){
-      o.posts.push(data);
+      location.reload();
     });
   };
   // HTTP delete a post
@@ -53,11 +53,11 @@ app.factory('posts', ['$http', 'auth', function($http, auth){
     return $http.put('/posts/'+post._id+'/upvote', null, {
       headers: {Authorization: 'Bearer '+auth.getToken()}
     }).success(function(data){
-      var username = auth.currentUser().username;
-      if (!post.upvotes.includes(username)){
-        post.upvotes.push(username);
+      var id = auth.currentUser()._id;
+      if (!post.upvotes.includes(id)){
+        post.upvotes.push(id);
       } else {
-        var index = post.upvotes.indexOf(username);
+        var index = post.upvotes.indexOf(id);
         post.upvotes.splice(index, 1);
       }
       });
@@ -78,11 +78,11 @@ app.factory('posts', ['$http', 'auth', function($http, auth){
     return $http.put('/posts/'+post._id+'/comments/'+comment._id+'/upvote', null, {
       headers: {Authorization: 'Bearer '+auth.getToken()}
     }).success(function(data){
-      var username = auth.currentUser().username;
-      if (!comment.upvotes.includes(username)){
-        comment.upvotes.push(username);
+      var id = auth.currentUser()._id;
+      if (!comment.upvotes.includes(id)){
+        comment.upvotes.push(id);
       } else {
-        var index = comment.upvotes.indexOf(username);
+        var index = comment.upvotes.indexOf(id);
         comment.upvotes.splice(index, 1);
       }
       });
