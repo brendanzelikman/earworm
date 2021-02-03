@@ -255,8 +255,56 @@ style="min-width: 100%; min-height: 100%;">
     <div class="page-header">
       <a href="#/home"><img src="/images/logo.png" class="logo"></a>
     </div>
+    <ul class="nav justify-content-center">
+  <div>
+    <button class="profile-tab" id="bio-tab" style="opacity: 1;" ng-click="selectBio()">Bio</button>
+    <button class="profile-tab" id="posts-tab" style="opacity: 0.7" ng-click="selectPosts()">Posts</button>
+  </div>
+    <div ng-hide="showingBio" style="margin-top: 50px; text-align: center;">
+      <div ng-repeat="post in posts" class="post-body" style="margin-top: 20px;">
+        <!-- Post Control -->
+        <div style="position: absolute; top: 5px; right: 5px; display: inline-block;">
+          <!-- Edit Comment -->
+          <span class="glyphicon glyphicon-edit"
+          ng-show="authoredPost(post)" ng-click="editPost(post)"></span>
+          <!-- Delete Post -->
+          <span class="glyphicon glyphicon-remove"
+          ng-show="authoredPost(post)" ng-click="deletePost(post)"></span>
+        </div>
+        <span class="glyphicon glyphicon-volume-up"
+        style="position: absolute; top: 22.5px; left: 20px; font-size: 1.5em;"></span>
+        <!-- Author + Title + Artist -->
+        <div style="float: left; margin-left: 30px; font-size: 1.5em; position: relative">
+          <a href="#/users/{{post.author.username}}" style="color:black">{{ post.author.username }}</a>
+          is listening to <b class="bold">{{post.song.title}}</b> - <i class="italic">{{post.song.artist}}</i>
+        </div>
+        <br><br>
+        <!-- Caption -->
+        <span style="font-size: 1.5em; position: relative; margin-left: 40px; margin-top: 5px;
+        display: inline-block; width: calc(100% - 180px);" class="italic">
+        <span ng-hide="post.caption">{{post.caption}}</span>
+        <span ng-show="post.caption">"{{post.caption}}"</span>
+        </span>
+        <br>
+        <!-- Media -->
+        <span style="position: absolute; bottom: 5px; right: 5px;">
+          <!-- Upvote Button -->
+          <span ng-show="isLoggedIn()" class="glyphicon glyphicon-thumbs-up" ng-click="upvotePost(post)"></span>
+          <span style="cursor: not-allowed" ng-hide="isLoggedIn()"
+          class="glyphicon glyphicon-thumbs-up" ng-click="upvotePost(post)"></span>
+          <!-- Upvote Count -->
+          <span ng-show="upvotedPost(post)" class="bold">{{post.upvotes.length}}</span>
+          <span ng-hide="upvotedPost(post)">{{post.upvotes.length}}</span>
+          <!-- Link to Post -->
+          <a href="#/posts/{{post._id}}">
+            <span style="margin-left: 5px; filter: grayscale(100%)" class="glyphicon glyphicon-comment"></span>
+          </a>
+          {{post.comments.length}} | posted {{timeSince(post.createdAt)}} ago
+        </span>
+      </div>
+    </div>
     <!-- User Info -->
-    <div style="margin-top: 50px; text-align: center;">
+    <div ng-show="showingBio" style="margin-top: 50px; text-align: center;">
       <!-- Follow/Unfollow -->
       <div ng-hide="isUser() || !isLoggedIn()">
         <!-- Follow Button -->

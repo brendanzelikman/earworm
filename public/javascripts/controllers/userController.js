@@ -5,14 +5,21 @@ app.controller('UserCtrl', [
   '$scope',
   'users',
   'user',
+  'posts',
   'auth',
-  function($scope, users, user, auth){
+  function($scope, users, user, posts, auth){
     if (user === null) auth.goHome();
     // Initialized scope variables
     $scope.profile = user;
     $scope.editing = false;
     $scope.isUser = function(){};
     $scope.isLoggedIn = auth.isLoggedIn;
+    $scope.tab = localStorage.getItem('selectedTab');
+    $scope.showingBio = ($scope.tab === 'bio');
+    document.getElementById('bio-tab').style.opacity = ($scope.tab === "bio" ? 1 : 0.5);
+    document.getElementById('posts-tab').style.opacity = ($scope.tab === "posts" ? 1 : 0.5);
+    $scope.posts = user.posts;
+
     // Show following list of profile
     $scope.showFollowing = function(){
       var following = $scope.profile.following;
@@ -113,6 +120,14 @@ app.controller('UserCtrl', [
             users.editUser(user, newUser);
             $scope.editing = false;
           };
+          // Upvote the post of the page
+          $scope.upvotePost = function(post){
+            posts.upvotePost(post);
+          };
+          // Return if user upvoted the post
+          $scope.upvotedPost = function(post){
+            if ($scope.isLoggedIn()) return post.upvotes.includes(auth.currentUser()._id);
+          };
           // Delete user profile
           $scope.deleteProfile = function(user){
             bootbox.confirm({
@@ -145,6 +160,32 @@ app.controller('UserCtrl', [
                 }
               }
             });
+          };
+          $scope.selectPosts = function(){
+            $scope.showingBio = false;
+            localStorage.setItem('selectedTab', 'posts');
+            document.getElementById('bio-tab').style.opacity = 0.5;
+            document.getElementById('posts-tab').style.opacity = 1;
+          };
+          $scope.selectBio = function(){
+            $scope.showingBio = true;
+            localStorage.setItem('selectedTab', 'bio');
+            document.getElementById('bio-tab').style.opacity = 1;
+            document.getElementById('posts-tab').style.opacity = 0.5;
+          };
+          $scope.timeSince = function(date) {
+            var seconds = Math.floor((new Date() - Date.parse(date)) / 1000);
+            var interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + "y";
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + "mo";
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + "d";
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + "h";
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + "m";
+            return Math.floor(seconds) + "s";
           };
         });
       }

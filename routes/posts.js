@@ -34,9 +34,13 @@ router.get('/posts', function(req, res, next){
 router.post('/posts', auth, function(req, res, next){
   var post = new Post(req.body);
   post.author = req.payload._id;
-
+  User.findById(post.author)
+    .exec(function(err, user){
+      user.posts.push(post._id);
+      user.save();
+    });
   return post.save(function(err, post){
-    if (err) { return next(err); }
+    if (err) return next(err);
     res.json(post);
   });
 });

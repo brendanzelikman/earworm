@@ -12,6 +12,7 @@ var UserSchema = new mongoose.Schema({
   favArtist: String,
   following: {type: Array, default: []},
   followers: {type: Array, default: []},
+  posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post'}],
   hash: String,
   salt: String
 });

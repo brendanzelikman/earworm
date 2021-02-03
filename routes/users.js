@@ -46,10 +46,16 @@ router.put('/users/:username', function(req, res, next){
 });
 
 router.get('/users/:username', function(req, res, next){
-  User.findOne({username: req.params.username}, function(err, user){
-    if (err) { return next(err); }
-    res.json(user);
-  });
+  User.findOne({username: req.params.username})
+    .populate({
+      path: 'posts',
+      populate: {
+        path: 'author',
+      }})
+    .exec(function(err, user){
+      if (err) { return next(err); }
+      res.json(user);
+    });
 });
 
 router.delete('/users/:username', auth, function(req, res, next){

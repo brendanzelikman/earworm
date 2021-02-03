@@ -98,6 +98,18 @@
   width: 50%;
 }
 
+.profile-tab {
+  display: inline-block;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  outline-width: 0px;
+  width: 49%
+}
+
+.profile-tab:hover {
+  background-color: #ddd
+}
+
 .footer-padding {
   height: 5%;
   padding: 5%;
